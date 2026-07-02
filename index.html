@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sipakar-Belajar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;}
+        @keyframes blobFloat { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } }
+        .animate-blob { animation: blobFloat 10s infinite ease-in-out; }
+        @keyframes floatRotate { 0%, 100% { transform: translate(25%, -25%) rotate(-5deg); } 50% { transform: translate(20%, -20%) rotate(5deg); } }
+        .animate-float-rotate { animation: floatRotate 8s infinite ease-in-out; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        @keyframes ringPulse { 0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5); } 70% { box-shadow: 0 0 0 15px rgba(37, 99, 235, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); } }
+        .animate-ring-pulse { animation: ringPulse 2.5s infinite; }
+        @keyframes popWiggle { 0%, 100% { transform: scale(1) rotate(0deg); } 15% { transform: scale(1.25) rotate(-10deg); } 30% { transform: scale(1.25) rotate(10deg); } 45% { transform: scale(1.25) rotate(-10deg); } 60% { transform: scale(1) rotate(0deg); } }
+        .animate-icon-0 { animation: popWiggle 5s infinite ease-in-out; display: inline-block; }
+        .animate-icon-1 { animation: popWiggle 5s infinite ease-in-out 1.6s; display: inline-block; }
+        .animate-icon-2 { animation: popWiggle 5s infinite ease-in-out 3.2s; display: inline-block; }
+        @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .animate-float-0 { animation: floatY 3s ease-in-out infinite; }
+        .animate-float-1 { animation: floatY 4s ease-in-out infinite 0.5s; }
+        .animate-float-2 { animation: floatY 3.5s ease-in-out infinite 1s; }
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        
+        .app-container { width: 100%; height: 100dvh; max-width: 450px; background-color: white; position: relative; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        @media (min-width: 640px) { .app-container { height: 850px; border-radius: 40px; } }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div id="app-content" class="flex-1 overflow-hidden relative flex flex-col bg-slate-50"></div>
+
+        <div id="bottom-nav" class="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-100 px-6 py-3 pb-6 sm:pb-4 flex justify-between items-center z-30 transition-all duration-300">
+            <button onclick="app.goTo('home')" id="nav-home" class="flex flex-col items-center gap-1 p-2 w-20 transition-all text-blue-600 scale-110">
+                <i data-lucide="home" class="w-6 h-6"></i>
+                <span class="text-[10px] font-bold">Beranda</span>
+            </button>
+            <button onclick="app.goTo('edukasi')" id="nav-edukasi" class="flex flex-col items-center gap-1 p-2 w-20 transition-all text-slate-400 opacity-60">
+                <i data-lucide="book-open" class="w-6 h-6"></i>
+                <span class="text-[10px] font-bold">Edukasi</span>
+            </button>
+            <button onclick="app.goTo('history')" id="nav-history" class="flex flex-col items-center gap-1 p-2 w-20 transition-all text-slate-400 opacity-60">
+                <i data-lucide="history" class="w-6 h-6"></i>
+                <span class="text-[10px] font-bold">Riwayat</span>
+            </button>
+        </div>
+    </div>
+
+<script>
+const KNOWLEDGE_BASE = {
+  disleksia: {
+    id: 'disleksia', title: "Disleksia (Kesulitan Membaca)", icon: "📖", color: "bg-indigo-100 text-indigo-600", indicator: "bg-indigo-500",
+    description: "Disleksia adalah gangguan belajar spesifik yang mempengaruhi kemampuan seseorang dalam membaca, mengeja, dan mengenali kata. Ini tidak ada hubungannya dengan tingkat kecerdasan (IQ). Anak dengan disleksia sering melihat huruf secara terbalik (seperti b dan d) atau kesulitan memecah kata menjadi suara-suara (fonem).",
+    advice: [
+      "Gunakan metode belajar multisensori (melihat, mendengar, menyentuh bentuk huruf).",
+      "Bacakan buku cerita bersama anak secara rutin dan tunjuk kata yang sedang dibaca.",
+      "Gunakan buku dengan font khusus yang mudah dibaca dan ukuran yang cukup besar.",
+      "Berikan pujian pada setiap kemajuan kecil, hindari memaksa anak membaca dengan cepat."
+    ],
+    elements: ["📖", "Aa", "🧠"]
+  },
+  diskalkulia: {
+    id: 'diskalkulia', title: "Diskalkulia (Kesulitan berhitung)", icon: "🔢", color: "bg-emerald-100 text-emerald-600", indicator: "bg-emerald-500",
+    description: "Diskalkulia adalah kesulitan belajar yang spesifik terhadap matematika. Anak dengan kondisi ini kesulitan memahami konsep dasar angka, operasi hitung (tambah, kurang, kali, bagi), mengelola waktu (membaca jam), dan estimasi jarak atau ukuran.",
+    advice: [
+      "Gunakan objek nyata (seperti balok, kancing) untuk mengajarkan konsep berhitung.",
+      "Hubungkan matematika dengan kehidupan sehari-hari (misalnya menghitung uang belanja).",
+      "Hindari hafalan tabel perkalian secara paksa, fokuslah pada pemahaman konsep dasar.",
+      "Gunakan bantuan visual seperti gambar atau jari untuk membantu perhitungan."
+    ],
+    elements: ["🔢", "➕", "📏"]
+  },
+  disgrafia: {
+    id: 'disgrafia', title: "Disgrafia (Kesulitan Menulis)", icon: "✍️", color: "bg-orange-100 text-orange-600", indicator: "bg-orange-500",
+    description: "Disgrafia adalah kondisi yang menyebabkan masalah dengan ekspresi tertulis. Ini mencakup masalah motorik halus (cara memegang pensil yang canggung, tulisan tidak terbaca) maupun kesulitan dalam menyusun kalimat dan menuangkan ide dari otak ke atas kertas secara berurutan.",
+    advice: [
+      "Latih motorik halus anak melalui permainan (seperti meremas playdough atau menyusun balok).",
+      "Gunakan alat bantu pegangan pensil (pencil grip) agar anak lebih nyaman saat menulis.",
+      "Gunakan kertas bergaris tebal untuk membantu konsistensi ukuran huruf anak.",
+      "Berikan waktu ekstra saat anak mendapat tugas menulis, atau perbolehkan mengetik."
+    ],
+    elements: ["✍️", "📝", "🎨"]
+  },
+  normal: {
+    id: 'normal', title: "Tidak Terindikasi (Normal)", icon: "🌟", color: "bg-blue-100 text-blue-600",
+    description: "Berdasarkan diagnosa, perkembangan belajar anak berada dalam rentang wajar dan tidak menunjukkan gejala spesifik kesulitan belajar.",
+    advice: [
+      "Perkembangan belajar anak tampak berada dalam batas wajar.",
+      "Terus berikan stimulasi belajar yang positif dan menyenangkan.",
+      "Pantau terus perkembangan anak secara berkala di sekolah dan rumah.",
+      "Dukung penuh minat dan bakat anak di bidang yang ia sukai."
+    ]
+  }
+};
+
+const BASE_QUESTIONS = [
+  { factId: 'G01', type: 'disleksia', text: 'Kesulitan mengeja kata dengan benar atau sering terbolak balik.' },
+  { factId: 'G02', type: 'disleksia', text: 'Membaca dengan lambat dan sering kali salah menebak kata.' },
+  { factId: 'G03', type: 'disleksia', text: 'Kesulitan memahami teks bacaan secara menyeluruh.' },
+  { factId: 'G04', type: 'disleksia', text: 'Sering kali salah atau tertukar saat menulis huruf yang mirip seperti (b-d, p-q, m-w).' },
+  { factId: 'G05', type: 'disgrafia', text: 'Ukuran atau jarak antar huruf dalam tulis tangan sangat tidak konsisten.' },
+  { factId: 'G06', type: 'disgrafia', text: 'Kesulitan menyalin teks dari papan tulis ke buku catatan.' },
+  { factId: 'G07', type: 'disgrafia', text: 'Proses menulis secara fisik sangat lambat dan tampak melelahkan.' },
+  { factId: 'G08', type: 'diskalkulia', text: 'Kesulitan Mengingat atau memahami fakta matematika dasar (Tambah,Kurang,Kali).' },
+  { factId: 'G09', type: 'diskalkulia', text: 'Sering terbalik saat menulis atau membaca angka (Misal 13 menjadi 31, atau 6 dengan 9).' },
+  { factId: 'G10', type: 'diskalkulia', text: 'Kesulitan membaca grafik, tabel, atau memahami konsep waktu (jam/kalender).' },
+  { factId: 'G11', type: 'diskalkulia', text: 'Kesulitan menghitung uang kembalian atau mengurutkan angka acak.' }
+];
+
+const state = {
+    currentView: 'home',
+    prevView: 'home',
+    currentQuestionIndex: 0,
+    answers: {},
+    selectedDetail: null,
+    history: JSON.parse(localStorage.getItem('sipakar-history')) || []
+};
+
+const app = {
+    goTo: function(view) {
+        state.currentView = view;
+        this.render();
+    },
+    openDetail: function(key, from) {
+        state.selectedDetail = key;
+        state.prevView = from;
+        this.goTo('detail');
+    },
+    startTest: function() {
+        state.answers = {};
+        state.currentQuestionIndex = 0;
+        this.goTo('test');
+    },
+    goBackQuestion: function() {
+        if (state.currentQuestionIndex > 0) {
+            state.currentQuestionIndex--;
+            this.render();
+        } else {
+            this.goTo('home');
+        }
+    },
+    handleAnswer: function(value) {
+        const currentQ = BASE_QUESTIONS[state.currentQuestionIndex];
+        state.answers[currentQ.factId] = value;
+
+        if (state.currentQuestionIndex < BASE_QUESTIONS.length - 1) {
+            state.currentQuestionIndex++;
+            this.render();
+        } else {
+            this.processResult();
+        }
+    },
+    runForwardChaining: function(currentAnswers) {
+        let facts = new Set();
+        BASE_QUESTIONS.forEach(q => {
+            if (currentAnswers[q.factId] === 1) facts.add(q.factId);
+        });
+
+        const rules = [
+            { id: 'R_DIS_1', premise: ['G01'], conclusion: 'IND_DIS_1' },
+            { id: 'R_DIS_2', premise: ['G02'], conclusion: 'IND_DIS_2' },
+            { id: 'R_DIS_3', premise: ['G03'], conclusion: 'IND_DIS_3' },
+            { id: 'R_DIS_4', premise: ['G04'], conclusion: 'IND_DIS_4' },
+            { id: 'R_DIS_TINGGI_1', premise: ['IND_DIS_1', 'IND_DIS_2'], conclusion: 'DISLEKSIA_TINGGI' },
+            { id: 'R_DIS_TINGGI_2', premise: ['IND_DIS_3', 'IND_DIS_4'], conclusion: 'DISLEKSIA_TINGGI' },
+            { id: 'R_DIS_SEDANG_1', premise: ['IND_DIS_1'], conclusion: 'DISLEKSIA_SEDANG' },
+            { id: 'R_DIS_SEDANG_2', premise: ['IND_DIS_2'], conclusion: 'DISLEKSIA_SEDANG' },
+            { id: 'R_GRAF_1', premise: ['G05'], conclusion: 'IND_GRAF_1' },
+            { id: 'R_GRAF_2', premise: ['G06'], conclusion: 'IND_GRAF_2' },
+            { id: 'R_GRAF_3', premise: ['G07'], conclusion: 'IND_GRAF_3' },
+            { id: 'R_GRAF_TINGGI_1', premise: ['IND_GRAF_1', 'IND_GRAF_3'], conclusion: 'DISGRAFIA_TINGGI' },
+            { id: 'R_KAL_1', premise: ['G08'], conclusion: 'IND_KAL_1' },
+            { id: 'R_KAL_2', premise: ['G09'], conclusion: 'IND_KAL_2' },
+            { id: 'R_KAL_3', premise: ['G10'], conclusion: 'IND_KAL_3' },
+            { id: 'R_KAL_4', premise: ['G11'], conclusion: 'IND_KAL_4' },
+            { id: 'R_KAL_TINGGI_1', premise: ['IND_KAL_1', 'IND_KAL_2'], conclusion: 'DISKALKULIA_TINGGI' },
+            { id: 'R_KAL_TINGGI_2', premise: ['IND_KAL_3', 'IND_KAL_4'], conclusion: 'DISKALKULIA_TINGGI' }
+        ];
+
+        let changed = true;
+        while (changed) {
+            changed = false;
+            for (let rule of rules) {
+                if (!facts.has(rule.conclusion)) {
+                    if (rule.premise.every(p => facts.has(p))) {
+                        facts.add(rule.conclusion);
+                        changed = true; 
+                    }
+                }
+            }
+        }
+
+        const getDiagnosis = (category) => {
+            if (facts.has(`${category}_TINGGI`)) return { level: 'Tinggi', percent: 100 };
+            if (facts.has(`${category}_SEDANG`)) return { level: 'Sedang', percent: 55 };
+            return { level: 'Rendah', percent: 15 };
+        };
+
+        return {
+            disleksia: getDiagnosis('DISLEKSIA'),
+            diskalkulia: getDiagnosis('DISKALKULIA'),
+            disgrafia: getDiagnosis('DISGRAFIA')
+        };
+    },
+    processResult: function() {
+        const results = this.runForwardChaining(state.answers);
+        let primaryKey = 'normal';
+        let maxPercent = 0;
+        
+        ['disleksia', 'diskalkulia', 'disgrafia'].forEach(key => {
+            if (results[key].percent > maxPercent) {
+                maxPercent = results[key].percent;
+                primaryKey = key;
+            }
+        });
+        if (maxPercent <= 15) primaryKey = 'normal';
+
+        const dateStr = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        
+        const newHistoryItem = {
+            id: Date.now(), date: dateStr, primaryKey,
+            level: primaryKey === 'normal' ? 'Rendah' : results[primaryKey].level,
+            color: primaryKey === 'normal' ? 'text-green-600 bg-green-100' : 'text-blue-600 bg-blue-100'
+        };
+
+        state.history.unshift(newHistoryItem);
+        localStorage.setItem('sipakar-history', JSON.stringify(state.history));
+        this.goTo('result');
+    },
+
+    render: function() {
+        const contentDiv = document.getElementById('app-content');
+        const navDiv = document.getElementById('bottom-nav');
+        let html = '';
+
+        if (['test', 'detail', 'result'].includes(state.currentView)) {
+            navDiv.style.transform = "translateY(100%)";
+            navDiv.style.opacity = "0";
+            navDiv.style.pointerEvents = "none";
+        } else {
+            navDiv.style.transform = "translateY(0)";
+            navDiv.style.opacity = "1";
+            navDiv.style.pointerEvents = "auto";
+            this.updateNavUI();
+        }
+
+        switch(state.currentView) {
+            case 'home': html = this.getHomeHTML(); break;
+            case 'test': html = this.getTestHTML(); break;
+            case 'result': html = this.getResultHTML(); break;
+            case 'history': html = this.getHistoryHTML(); break;
+            case 'edukasi': html = this.getEdukasiHTML(); break;
+            case 'detail': html = this.getDetailHTML(); break;
+        }
+
+        contentDiv.innerHTML = html;
+        lucide.createIcons();
+    },
+
+    updateNavUI: function() {
+        const navs = ['home', 'edukasi', 'history'];
+        navs.forEach(nav => {
+            const btn = document.getElementById(`nav-${nav}`);
+            if(btn) {
+                if (state.currentView === nav) {
+                    btn.className = "flex flex-col items-center gap-1 p-2 w-20 transition-all text-blue-600 scale-110";
+                } else {
+                    btn.className = "flex flex-col items-center gap-1 p-2 w-20 transition-all text-slate-400 opacity-60 hover:text-slate-600 hover:opacity-100";
+                }
+            }
+        });
+    },
+
+    getHomeHTML: function() {
+        let categoriesHtml = ['disleksia', 'diskalkulia', 'disgrafia'].map((key, idx) => {
+            const item = KNOWLEDGE_BASE[key];
+            return `
+                <div class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-slate-100 cursor-pointer active:bg-slate-50 transition-all hover:shadow-md animate-fade-in-up" 
+                     style="animation-delay: ${600 + (idx * 150)}ms" onclick="app.openDetail('${key}', 'home')">
+                  <div class="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg shrink-0 ${item.color}">
+                    <span class="animate-icon-${idx}" style="animation-delay: ${idx * 0.3}s">${item.icon}</span>
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="font-bold text-slate-800 leading-tight mb-1">${item.title}</h4>
+                    <p class="text-[11px] text-slate-500 line-clamp-1">Klik untuk penjelasan & solusi</p>
+                  </div>
+                  <i data-lucide="chevron-right" class="w-5 h-5 text-slate-400 shrink-0"></i>
+                </div>`;
+        }).join('');
+
+        return `
+            <div class="flex flex-col h-full overflow-y-auto pb-24">
+              <div class="bg-blue-600 rounded-b-[40px] p-8 pt-12 pb-16 text-white shadow-lg relative overflow-hidden shrink-0">
+                <div class="absolute top-[-10%] left-[-10%] w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+                <div class="absolute bottom-[-10%] right-[-10%] w-64 h-64 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" style="animation-delay: 2s"></div>
+                <div class="absolute top-0 right-0 opacity-10 animate-float-rotate">
+                  <i data-lucide="book" style="width: 240px; height: 240px;"></i>
+                </div>
+                <div class="animate-fade-in-up" style="animation-delay: 0ms">
+                  <div class="flex items-center gap-3 mb-2 relative z-10">
+                    <div class="bg-white/20 p-2 rounded-xl backdrop-blur-md"><i data-lucide="book" class="text-white w-7 h-7"></i></div>
+                    <h1 class="text-3xl font-bold tracking-tight">Sipakar-Belajar</h1>
+                  </div>
+                </div>
+                <p class="text-blue-50 mb-8 text-sm leading-relaxed relative z-10 opacity-90 animate-fade-in-up" style="animation-delay: 150ms">
+                  Sistem Pakar Diagnosa Kesulitan Belajar Berbasis Forward Chaining.
+                </p>
+                <div class="animate-fade-in-up" style="animation-delay: 300ms">
+                  <button onclick="app.startTest()" class="w-full bg-white text-blue-600 font-bold py-4 rounded-2xl shadow-xl flex items-center justify-center gap-2 active:scale-95 transition-all relative z-10 animate-ring-pulse hover:bg-slate-50">
+                    <i data-lucide="stethoscope" class="w-6 h-6"></i> Mulai Diagnosa
+                  </button>
+                </div>
+              </div>
+              <div class="px-6 relative z-10 flex-grow flex flex-col justify-center pt-6">
+                <div class="w-full animate-fade-in-up" style="animation-delay: 450ms">
+                  <h3 class="font-bold text-slate-800 mb-4 px-1">Kategori Diagnosa</h3>
+                  <div class="space-y-3">${categoriesHtml}</div>
+                </div>
+              </div>
+            </div>`;
+    },
+
+    getTestHTML: function() {
+        const question = BASE_QUESTIONS[state.currentQuestionIndex];
+        const progress = ((state.currentQuestionIndex) / BASE_QUESTIONS.length) * 100;
+        const categoryInfo = KNOWLEDGE_BASE[question.type];
+        const sequentialCode = `G${String(state.currentQuestionIndex + 1).padStart(2, '0')}`;
+        const rotations = ['-rotate-6', 'rotate-12', '-rotate-3'];
+
+        let elementsHtml = categoryInfo.elements.map((el, idx) => `
+            <div class="animate-float-${idx}">
+                <div class="w-14 h-14 rounded-2xl ${categoryInfo.color.split(' ')[0]} flex items-center justify-center text-2xl shadow-sm transform ${rotations[idx]} opacity-80">${el}</div>
+            </div>`).join('');
+
+        return `
+            <div class="flex flex-col h-full bg-slate-50 overflow-hidden">
+                <div class="bg-white px-4 py-4 flex items-center shadow-sm sticky top-0 z-20">
+                  <button onclick="app.goBackQuestion()" class="p-2 -ml-2 text-slate-600 active:bg-slate-100 rounded-full transition-colors">
+                    <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                  </button>
+                  <div class="flex-1 text-center font-bold text-slate-800">Identifikasi Masalah ${state.currentQuestionIndex + 1}/${BASE_QUESTIONS.length}</div>
+                  <div class="w-10"></div> 
+                </div>
+                <div class="h-1.5 w-full bg-slate-200 shrink-0">
+                  <div class="h-full bg-blue-500 transition-all duration-300 ease-out" style="width: ${progress}%"></div>
+                </div>
+                <div class="flex-1 px-6 py-6 flex flex-col overflow-y-auto">
+                  <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-6 relative shrink-0">
+                    <div class="absolute top-0 left-0 w-full h-1 ${categoryInfo.indicator}"></div>
+                    <div class="flex items-start gap-4 mt-2">
+                      <div class="shrink-0 px-3 py-1.5 rounded-xl text-sm font-bold shadow-sm ${categoryInfo.color}">${sequentialCode}</div>
+                      <h2 class="text-[17px] font-medium text-slate-700 leading-relaxed text-left flex-1">${question.text}</h2>
+                    </div>
+                  </div>
+                  <div class="shrink-0 mb-6">
+                    <p class="text-center text-slate-500 mb-4 text-sm font-medium">Apakah anak mengalami masalah ini?</p>
+                    <div class="space-y-4">
+                        <button onclick="app.handleAnswer(1)" class="w-full bg-white border-2 border-slate-100 text-slate-700 p-4 rounded-2xl font-bold text-xl active:border-blue-500 active:bg-blue-50 transition-all shadow-sm flex items-center justify-between">Ya<div class="w-6 h-6 rounded-full border-2 border-slate-200"></div></button>
+                        <button onclick="app.handleAnswer(0)" class="w-full bg-white border-2 border-slate-100 text-slate-700 p-4 rounded-2xl font-bold text-xl active:border-blue-500 active:bg-blue-50 transition-all shadow-sm flex items-center justify-between">Tidak<div class="w-6 h-6 rounded-full border-2 border-slate-200"></div></button>
+                    </div>
+                  </div>
+                  <div class="mt-8 mb-auto flex justify-center items-center gap-6 pb-6">${elementsHtml}</div>
+                </div>
+            </div>`;
+    },
+
+    getResultHTML: function() {
+        const historyItem = state.history[0];
+        const solutionData = KNOWLEDGE_BASE[historyItem.primaryKey];
+        let adviceHtml = solutionData.advice.map((item) => `
+            <li class="flex gap-3 text-sm text-slate-600"><span class="text-blue-500 font-bold">•</span><span>${item}</span></li>
+        `).join('');
+
+        return `
+            <div class="flex flex-col h-full bg-slate-50 overflow-y-auto pb-24">
+                <div class="bg-blue-600 p-6 pt-10 text-white text-center rounded-b-[30px] shadow-md shrink-0">
+                  <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-md">
+                    <i data-lucide="check-circle-2" class="text-white w-8 h-8"></i>
+                  </div>
+                  <h2 class="text-2xl font-bold mb-1">Hasil Diagnosa</h2>
+                  <p class="text-blue-100 text-sm opacity-90">Kesimpulan Berdasarkan Forward Chaining</p>
+                </div>
+                <div class="px-5 py-6">
+                  <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 mb-4">
+                    <h3 class="font-bold text-slate-800 flex items-center gap-2 mb-3">
+                      <span class="text-2xl">${solutionData.icon}</span> ${solutionData.title}
+                    </h3>
+                    <p class="text-sm text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100 text-justify leading-relaxed">${solutionData.description}</p>
+                  </div>
+                  <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 mt-2 mb-6">
+                    <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                      <i data-lucide="info" class="w-5 h-5 text-blue-500"></i> Solusi & Penanganan Awal
+                    </h3>
+                    <ul class="space-y-3">${adviceHtml}</ul>
+                  </div>
+                  <button onclick="app.goTo('home')" class="w-full mt-4 bg-white border-2 border-slate-200 text-slate-700 font-bold py-4 rounded-2xl flex items-center justify-center gap-2 active:bg-slate-50 transition-all">
+                    <i data-lucide="rotate-ccw" class="w-5 h-5"></i> Mulai Diagnosa Baru
+                  </button>
+                </div>
+            </div>`;
+    },
+
+    getHistoryHTML: function() {
+        let historyList = state.history.length === 0 ? `
+            <div class="text-center py-10">
+                <i data-lucide="history" class="w-12 h-12 mx-auto text-slate-300 mb-3"></i>
+                <p class="text-slate-500 font-medium">Belum ada riwayat.</p>
+            </div>` : state.history.map(item => `
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 mb-3">
+              <div class="flex justify-between items-start mb-2">
+                <div class="flex items-center gap-2 text-[10px] text-slate-500 font-medium uppercase tracking-wider">
+                  <i data-lucide="calendar-days" class="w-3 h-3"></i> ${item.date}
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase ${item.color}">Risiko ${item.level}</span>
+              </div>
+              <div class="flex items-center gap-3 mt-2">
+                <div class="text-2xl">${KNOWLEDGE_BASE[item.primaryKey].icon}</div>
+                <h4 class="font-bold text-slate-800 leading-tight">${KNOWLEDGE_BASE[item.primaryKey].title}</h4>
+              </div>
+            </div>`).join('');
+
+        return `
+            <div class="flex flex-col h-full bg-slate-50 overflow-y-auto pb-24">
+                <div class="bg-white px-4 py-4 flex items-center shadow-sm sticky top-0 z-20 shrink-0">
+                  <div class="flex-1 text-center font-bold text-slate-800">Riwayat Diagnosa</div>
+                </div>
+                <div class="p-6">${historyList}</div>
+            </div>`;
+    },
+
+    getEdukasiHTML: function() {
+        let edukasiList = ['disleksia', 'diskalkulia', 'disgrafia'].map(key => {
+            const item = KNOWLEDGE_BASE[key];
+            return `
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 cursor-pointer active:bg-slate-50 transition-colors mb-4" onclick="app.openDetail('${key}', 'edukasi')">
+                  <div class="flex items-center gap-3 mb-2">
+                    <div class="w-10 h-10 ${item.color} rounded-xl flex items-center justify-center font-bold text-lg">${item.icon}</div>
+                    <h3 class="font-bold text-slate-800 leading-tight">${item.title}</h3>
+                  </div>
+                  <p class="text-slate-500 text-sm line-clamp-2 mt-2">${item.description}</p>
+                  <div class="mt-3 flex items-center text-blue-600 text-xs font-bold uppercase tracking-wide">
+                    Lihat Detail <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                  </div>
+                </div>`;
+        }).join('');
+
+        return `
+            <div class="flex flex-col h-full bg-slate-50 overflow-y-auto pb-24">
+                <div class="bg-white px-4 py-4 flex items-center shadow-sm sticky top-0 z-20 shrink-0">
+                  <div class="flex-1 text-center font-bold text-slate-800">Basis Pengetahuan</div>
+                </div>
+                <div class="p-6">${edukasiList}</div>
+            </div>`;
+    },
+
+    getDetailHTML: function() {
+        const data = KNOWLEDGE_BASE[state.selectedDetail];
+        let adviceList = data.advice.map((item, idx) => `
+            <li class="flex gap-3 text-sm text-slate-600 items-start">
+              <div class="w-6 h-6 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold shrink-0 mt-0.5">${idx + 1}</div>
+              <span class="leading-relaxed">${item}</span>
+            </li>`).join('');
+
+        return `
+            <div class="flex flex-col h-full bg-white overflow-y-auto pb-24">
+                <div class="bg-white px-4 py-4 flex items-center shadow-sm sticky top-0 z-20 shrink-0">
+                  <button onclick="app.goTo('${state.prevView}')" class="p-2 -ml-2 text-slate-600 active:bg-slate-100 rounded-full transition-colors">
+                    <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                  </button>
+                  <div class="flex-1 text-center font-bold text-slate-800 truncate px-2">Detail ${data.title.split(' ')[0]}</div>
+                  <div class="w-10"></div>
+                </div>
+                <div class="p-6">
+                  <div class="flex flex-col items-center text-center mb-8">
+                    <div class="w-20 h-20 ${data.color} rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-md">${data.icon}</div>
+                    <h2 class="text-2xl font-bold text-slate-800">${data.title}</h2>
+                  </div>
+                  <div class="mb-8">
+                    <h3 class="font-bold text-slate-800 mb-3 border-b pb-2 flex items-center gap-2">
+                        <i data-lucide="book-open" class="w-5 h-5 text-blue-500"></i> Penjelasan
+                    </h3>
+                    <p class="text-slate-600 text-sm leading-relaxed text-justify">${data.description}</p>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2">
+                        <i data-lucide="info" class="w-5 h-5 text-blue-500"></i> Solusi Penanganan
+                    </h3>
+                    <ul class="space-y-4">${adviceList}</ul>
+                  </div>
+                </div>
+            </div>`;
+    }
+};
+
+document.addEventListener("DOMContentLoaded", () => { app.render(); });
+</script>
+</body>
+</html>

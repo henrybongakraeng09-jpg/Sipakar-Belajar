@@ -19,9 +19,9 @@
         @keyframes ringPulse { 0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5); } 70% { box-shadow: 0 0 0 15px rgba(37, 99, 235, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); } }
         .animate-ring-pulse { animation: ringPulse 2.5s infinite; }
         @keyframes popWiggle { 0%, 100% { transform: scale(1) rotate(0deg); } 15% { transform: scale(1.25) rotate(-10deg); } 30% { transform: scale(1.25) rotate(10deg); } 45% { transform: scale(1.25) rotate(-10deg); } 60% { transform: scale(1) rotate(0deg); } }
-        .animate-icon-0 { animation: popWiggle 5s infinite ease-in-out; display: inline-block; }
-        .animate-icon-1 { animation: popWiggle 5s infinite ease-in-out 1.6s; display: inline-block; }
-        .animate-icon-2 { animation: popWiggle 5s infinite ease-in-out 3.2s; display: inline-block; }
+        .animate-icon-0 { animation: popWiggle 5s infinite ease-in-out; display: inline-block; transform-origin: center; }
+        .animate-icon-1 { animation: popWiggle 5s infinite ease-in-out 1.6s; display: inline-block; transform-origin: center; }
+        .animate-icon-2 { animation: popWiggle 5s infinite ease-in-out 3.2s; display: inline-block; transform-origin: center; }
         @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         .animate-float-0 { animation: floatY 3s ease-in-out infinite; }
         .animate-float-1 { animation: floatY 4s ease-in-out infinite 0.5s; }
@@ -37,16 +37,13 @@
     <div class="app-container">
         <div id="app-content" class="flex-1 overflow-hidden relative flex flex-col bg-slate-50"></div>
 
-        <div id="bottom-nav" class="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-100 px-6 py-3 pb-6 sm:pb-4 flex justify-between items-center z-30 transition-all duration-300">
-            <button onclick="app.goTo('home')" id="nav-home" class="flex flex-col items-center gap-1 p-2 w-20 transition-all text-blue-600 scale-110">
+        <!-- Navigation Bottom Update: Hanya 2 Menu (Beranda & Riwayat) dipisah rapi -->
+        <div id="bottom-nav" class="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-100 px-6 py-3 pb-6 sm:pb-4 flex justify-evenly items-center z-30 transition-all duration-300">
+            <button onclick="app.goTo('home')" id="nav-home" class="flex flex-col items-center gap-1 p-2 w-24 transition-all text-blue-600 scale-110">
                 <i data-lucide="home" class="w-6 h-6"></i>
                 <span class="text-[10px] font-bold">Beranda</span>
             </button>
-            <button onclick="app.goTo('edukasi')" id="nav-edukasi" class="flex flex-col items-center gap-1 p-2 w-20 transition-all text-slate-400 opacity-60">
-                <i data-lucide="book-open" class="w-6 h-6"></i>
-                <span class="text-[10px] font-bold">Edukasi</span>
-            </button>
-            <button onclick="app.goTo('history')" id="nav-history" class="flex flex-col items-center gap-1 p-2 w-20 transition-all text-slate-400 opacity-60">
+            <button onclick="app.goTo('history')" id="nav-history" class="flex flex-col items-center gap-1 p-2 w-24 transition-all text-slate-400 opacity-60">
                 <i data-lucide="history" class="w-6 h-6"></i>
                 <span class="text-[10px] font-bold">Riwayat</span>
             </button>
@@ -124,28 +121,39 @@ const state = {
 };
 
 const app = {
-    goTo: function(view) {
+    goTo: function(view, pushToHistory = true) {
         state.currentView = view;
+        if (pushToHistory) {
+            history.pushState({ view: view }, '', `#${view}`);
+        }
         this.render();
     },
-    openDetail: function(key, from) {
+
+    openDetail: function(key, from, pushToHistory = true) {
         state.selectedDetail = key;
         state.prevView = from;
-        this.goTo('detail');
+        state.currentView = 'detail';
+        if (pushToHistory) {
+            history.pushState({ view: 'detail', detailKey: key, prevView: from }, '', `#detail-${key}`);
+        }
+        this.render();
     },
+
     startTest: function() {
         state.answers = {};
         state.currentQuestionIndex = 0;
-        this.goTo('test');
+        this.goTo('test'); 
     },
+
     goBackQuestion: function() {
         if (state.currentQuestionIndex > 0) {
             state.currentQuestionIndex--;
             this.render();
         } else {
-            this.goTo('home');
+            history.back();
         }
     },
+
     handleAnswer: function(value) {
         const currentQ = BASE_QUESTIONS[state.currentQuestionIndex];
         state.answers[currentQ.factId] = value;
@@ -157,11 +165,10 @@ const app = {
             this.processResult();
         }
     },
+
     runForwardChaining: function(currentAnswers) {
         let facts = new Set();
-        BASE_QUESTIONS.forEach(q => {
-            if (currentAnswers[q.factId] === 1) facts.add(q.factId);
-        });
+        BASE_QUESTIONS.forEach(q => { if (currentAnswers[q.factId] === 1) facts.add(q.factId); });
 
         const rules = [
             { id: 'R_DIS_1', premise: ['G01'], conclusion: 'IND_DIS_1' },
@@ -203,12 +210,9 @@ const app = {
             return { level: 'Rendah', percent: 15 };
         };
 
-        return {
-            disleksia: getDiagnosis('DISLEKSIA'),
-            diskalkulia: getDiagnosis('DISKALKULIA'),
-            disgrafia: getDiagnosis('DISGRAFIA')
-        };
+        return { disleksia: getDiagnosis('DISLEKSIA'), diskalkulia: getDiagnosis('DISKALKULIA'), disgrafia: getDiagnosis('DISGRAFIA') };
     },
+
     processResult: function() {
         const results = this.runForwardChaining(state.answers);
         let primaryKey = 'normal';
@@ -232,7 +236,10 @@ const app = {
 
         state.history.unshift(newHistoryItem);
         localStorage.setItem('sipakar-history', JSON.stringify(state.history));
-        this.goTo('result');
+        
+        state.currentView = 'result';
+        history.replaceState({ view: 'result' }, '', `#result`);
+        this.render();
     },
 
     render: function() {
@@ -256,7 +263,6 @@ const app = {
             case 'test': html = this.getTestHTML(); break;
             case 'result': html = this.getResultHTML(); break;
             case 'history': html = this.getHistoryHTML(); break;
-            case 'edukasi': html = this.getEdukasiHTML(); break;
             case 'detail': html = this.getDetailHTML(); break;
         }
 
@@ -265,14 +271,14 @@ const app = {
     },
 
     updateNavUI: function() {
-        const navs = ['home', 'edukasi', 'history'];
+        const navs = ['home', 'history']; // Edukasi dihilangkan dari nav bawah
         navs.forEach(nav => {
             const btn = document.getElementById(`nav-${nav}`);
             if(btn) {
                 if (state.currentView === nav) {
-                    btn.className = "flex flex-col items-center gap-1 p-2 w-20 transition-all text-blue-600 scale-110";
+                    btn.className = "flex flex-col items-center gap-1 p-2 w-24 transition-all text-blue-600 scale-110";
                 } else {
-                    btn.className = "flex flex-col items-center gap-1 p-2 w-20 transition-all text-slate-400 opacity-60 hover:text-slate-600 hover:opacity-100";
+                    btn.className = "flex flex-col items-center gap-1 p-2 w-24 transition-all text-slate-400 opacity-60 hover:text-slate-600 hover:opacity-100";
                 }
             }
         });
@@ -300,24 +306,29 @@ const app = {
               <div class="bg-blue-600 rounded-b-[40px] p-8 pt-12 pb-16 text-white shadow-lg relative overflow-hidden shrink-0">
                 <div class="absolute top-[-10%] left-[-10%] w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
                 <div class="absolute bottom-[-10%] right-[-10%] w-64 h-64 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" style="animation-delay: 2s"></div>
+                
                 <div class="absolute top-0 right-0 opacity-10 animate-float-rotate">
                   <i data-lucide="book" style="width: 240px; height: 240px;"></i>
                 </div>
+
                 <div class="animate-fade-in-up" style="animation-delay: 0ms">
                   <div class="flex items-center gap-3 mb-2 relative z-10">
                     <div class="bg-white/20 p-2 rounded-xl backdrop-blur-md"><i data-lucide="book" class="text-white w-7 h-7"></i></div>
                     <h1 class="text-3xl font-bold tracking-tight">Sipakar-Belajar</h1>
                   </div>
                 </div>
+                
                 <p class="text-blue-50 mb-8 text-sm leading-relaxed relative z-10 opacity-90 animate-fade-in-up" style="animation-delay: 150ms">
                   Sistem Pakar Diagnosa Kesulitan Belajar Berbasis Forward Chaining.
                 </p>
+                
                 <div class="animate-fade-in-up" style="animation-delay: 300ms">
                   <button onclick="app.startTest()" class="w-full bg-white text-blue-600 font-bold py-4 rounded-2xl shadow-xl flex items-center justify-center gap-2 active:scale-95 transition-all relative z-10 animate-ring-pulse hover:bg-slate-50">
                     <i data-lucide="stethoscope" class="w-6 h-6"></i> Mulai Diagnosa
                   </button>
                 </div>
               </div>
+
               <div class="px-6 relative z-10 flex-grow flex flex-col justify-center pt-6">
                 <div class="w-full animate-fade-in-up" style="animation-delay: 450ms">
                   <h3 class="font-bold text-slate-800 mb-4 px-1">Kategori Diagnosa</h3>
@@ -362,8 +373,12 @@ const app = {
                   <div class="shrink-0 mb-6">
                     <p class="text-center text-slate-500 mb-4 text-sm font-medium">Apakah anak mengalami masalah ini?</p>
                     <div class="space-y-4">
-                        <button onclick="app.handleAnswer(1)" class="w-full bg-white border-2 border-slate-100 text-slate-700 p-4 rounded-2xl font-bold text-xl active:border-blue-500 active:bg-blue-50 transition-all shadow-sm flex items-center justify-between">Ya<div class="w-6 h-6 rounded-full border-2 border-slate-200"></div></button>
-                        <button onclick="app.handleAnswer(0)" class="w-full bg-white border-2 border-slate-100 text-slate-700 p-4 rounded-2xl font-bold text-xl active:border-blue-500 active:bg-blue-50 transition-all shadow-sm flex items-center justify-between">Tidak<div class="w-6 h-6 rounded-full border-2 border-slate-200"></div></button>
+                        <button onclick="app.handleAnswer(1)" class="w-full bg-white border-2 border-slate-100 text-slate-700 p-4 rounded-2xl font-bold text-xl active:border-blue-500 active:bg-blue-50 transition-all shadow-sm flex items-center justify-between">
+                          Ya<div class="w-6 h-6 rounded-full border-2 border-slate-200"></div>
+                        </button>
+                        <button onclick="app.handleAnswer(0)" class="w-full bg-white border-2 border-slate-100 text-slate-700 p-4 rounded-2xl font-bold text-xl active:border-blue-500 active:bg-blue-50 transition-all shadow-sm flex items-center justify-between">
+                          Tidak<div class="w-6 h-6 rounded-full border-2 border-slate-200"></div>
+                        </button>
                     </div>
                   </div>
                   <div class="mt-8 mb-auto flex justify-center items-center gap-6 pb-6">${elementsHtml}</div>
@@ -387,6 +402,7 @@ const app = {
                   <h2 class="text-2xl font-bold mb-1">Hasil Diagnosa</h2>
                   <p class="text-blue-100 text-sm opacity-90">Kesimpulan Berdasarkan Forward Chaining</p>
                 </div>
+
                 <div class="px-5 py-6">
                   <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 mb-4">
                     <h3 class="font-bold text-slate-800 flex items-center gap-2 mb-3">
@@ -394,12 +410,14 @@ const app = {
                     </h3>
                     <p class="text-sm text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100 text-justify leading-relaxed">${solutionData.description}</p>
                   </div>
+
                   <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 mt-2 mb-6">
                     <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
                       <i data-lucide="info" class="w-5 h-5 text-blue-500"></i> Solusi & Penanganan Awal
                     </h3>
                     <ul class="space-y-3">${adviceHtml}</ul>
                   </div>
+
                   <button onclick="app.goTo('home')" class="w-full mt-4 bg-white border-2 border-slate-200 text-slate-700 font-bold py-4 rounded-2xl flex items-center justify-center gap-2 active:bg-slate-50 transition-all">
                     <i data-lucide="rotate-ccw" class="w-5 h-5"></i> Mulai Diagnosa Baru
                   </button>
@@ -435,31 +453,6 @@ const app = {
             </div>`;
     },
 
-    getEdukasiHTML: function() {
-        let edukasiList = ['disleksia', 'diskalkulia', 'disgrafia'].map(key => {
-            const item = KNOWLEDGE_BASE[key];
-            return `
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 cursor-pointer active:bg-slate-50 transition-colors mb-4" onclick="app.openDetail('${key}', 'edukasi')">
-                  <div class="flex items-center gap-3 mb-2">
-                    <div class="w-10 h-10 ${item.color} rounded-xl flex items-center justify-center font-bold text-lg">${item.icon}</div>
-                    <h3 class="font-bold text-slate-800 leading-tight">${item.title}</h3>
-                  </div>
-                  <p class="text-slate-500 text-sm line-clamp-2 mt-2">${item.description}</p>
-                  <div class="mt-3 flex items-center text-blue-600 text-xs font-bold uppercase tracking-wide">
-                    Lihat Detail <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
-                  </div>
-                </div>`;
-        }).join('');
-
-        return `
-            <div class="flex flex-col h-full bg-slate-50 overflow-y-auto pb-24">
-                <div class="bg-white px-4 py-4 flex items-center shadow-sm sticky top-0 z-20 shrink-0">
-                  <div class="flex-1 text-center font-bold text-slate-800">Basis Pengetahuan</div>
-                </div>
-                <div class="p-6">${edukasiList}</div>
-            </div>`;
-    },
-
     getDetailHTML: function() {
         const data = KNOWLEDGE_BASE[state.selectedDetail];
         let adviceList = data.advice.map((item, idx) => `
@@ -471,7 +464,7 @@ const app = {
         return `
             <div class="flex flex-col h-full bg-white overflow-y-auto pb-24">
                 <div class="bg-white px-4 py-4 flex items-center shadow-sm sticky top-0 z-20 shrink-0">
-                  <button onclick="app.goTo('${state.prevView}')" class="p-2 -ml-2 text-slate-600 active:bg-slate-100 rounded-full transition-colors">
+                  <button onclick="history.back()" class="p-2 -ml-2 text-slate-600 active:bg-slate-100 rounded-full transition-colors">
                     <i data-lucide="chevron-left" class="w-6 h-6"></i>
                   </button>
                   <div class="flex-1 text-center font-bold text-slate-800 truncate px-2">Detail ${data.title.split(' ')[0]}</div>
@@ -499,7 +492,22 @@ const app = {
     }
 };
 
-document.addEventListener("DOMContentLoaded", () => { app.render(); });
+window.addEventListener('popstate', function(event) {
+    if (event.state && event.state.view) {
+        if (event.state.view === 'detail') {
+            app.openDetail(event.state.detailKey, event.state.prevView, false);
+        } else {
+            app.goTo(event.state.view, false);
+        }
+    } else {
+        app.goTo('home', false);
+    }
+});
+
+document.addEventListener("DOMContentLoaded", () => { 
+    history.replaceState({ view: 'home' }, '', '#home');
+    app.render(); 
+});
 </script>
 </body>
 </html>

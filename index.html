@@ -60,7 +60,6 @@
 
         <!-- DASHBOARD PAGE -->
         <div id="dashboard" class="page active">
-            <!-- Banner Instalasi PWA -->
             <div id="install-banner" class="hidden bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-4 text-white shadow-lg mb-6 flex justify-between items-center cursor-pointer hover:shadow-xl transform transition-all hover:-translate-y-1" onclick="installPWA()">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -149,7 +148,7 @@
             <div class="bg-white dark:bg-darkcard rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-5 mb-6">
                 <div class="text-center mb-6">
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Terindikasi:</p>
-                    <h3 id="hasil-penyakit" class="text-3xl font-bold text-primary mb-2">Disleksia</h3>
+                    <h3 id="hasil-penyakit" class="text-3xl font-bold text-primary mb-2"></h3>
                     <div class="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full text-sm font-semibold">
                         Kecocokan: <span id="hasil-persentase">0</span>%
                     </div>
@@ -183,42 +182,8 @@
                 <h2 class="text-xl font-bold">Informasi Kesulitan</h2>
             </div>
             
-            <div class="space-y-4">
-                <div class="bg-white dark:bg-darkcard rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-800">
-                    <h3 class="text-lg font-bold text-primary mb-2">1. Disleksia (Membaca)</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">Gangguan belajar yang mempengaruhi kemampuan anak dalam membaca, mengeja, dan mengenali kata. Sering tertukar huruf yang mirip (seperti b dan d).</p>
-                    <div class="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
-                        <strong class="text-sm text-blue-800 dark:text-blue-300">Penanganan Awal:</strong>
-                        <ul class="text-sm text-gray-700 dark:text-gray-400 list-disc ml-4 mt-1">
-                            <li>Bacakan buku cerita secara rutin.</li>
-                            <li>Gunakan media huruf plastisin atau pasir (multisensori).</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-darkcard rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-800">
-                    <h3 class="text-lg font-bold text-primary mb-2">2. Disgrafia (Menulis)</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">Gangguan yang mempengaruhi kemampuan menulis. Ciri utamanya tulisan tangan sangat sulit dibaca, jarak kata tidak beraturan, dan cara pegang pensil canggung.</p>
-                    <div class="bg-orange-50 dark:bg-orange-900/20 p-3 rounded-lg">
-                        <strong class="text-sm text-orange-800 dark:text-orange-300">Penanganan Awal:</strong>
-                        <ul class="text-sm text-gray-700 dark:text-gray-400 list-disc ml-4 mt-1">
-                            <li>Sediakan kertas bergaris tebal.</li>
-                            <li>Latih motorik halus (meremas spons, main lilin/playdough).</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-darkcard rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-800">
-                    <h3 class="text-lg font-bold text-primary mb-2">3. Diskalkulia (Berhitung)</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">Kondisi yang membuat anak kesulitan memahami angka, simbol matematika, perhitungan dasar, hingga konsep waktu (jam/hari).</p>
-                    <div class="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-                        <strong class="text-sm text-green-800 dark:text-green-300">Penanganan Awal:</strong>
-                        <ul class="text-sm text-gray-700 dark:text-gray-400 list-disc ml-4 mt-1">
-                            <li>Gunakan benda nyata untuk berhitung (kelereng, permen).</li>
-                            <li>Kaitkan angka dengan kegiatan sehari-hari.</li>
-                        </ul>
-                    </div>
-                </div>
+            <div id="info-list" class="space-y-4">
+                <!-- Data Informasi -->
             </div>
         </div>
 
@@ -249,11 +214,10 @@
                 <i class="fa-solid fa-brain text-6xl text-primary mb-4"></i>
                 <h3 class="text-xl font-bold mb-2">Educare</h3>
                 <p class="text-sm text-gray-500 mb-6">Versi Web 1.0.0</p>
-                
                 <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                    Aplikasi ini dirancang menggunakan metode <b>Forward Chaining</b> untuk mendeteksi dini 3 jenis kesulitan belajar pada anak: Disleksia, Disgrafia, dan Diskalkulia.
+                    Aplikasi ini menggunakan metode <b>Forward Chaining</b> untuk mendeteksi dini kesulitan belajar.
                 </p>
-                <p class="text-xs text-gray-400">Peringatan: Hasil dari aplikasi ini bersifat screening awal, konsultasikan dengan Psikolog/Dokter Anak untuk diagnosis medis yang pasti.</p>
+                <p class="text-xs text-gray-400">Hasil screening awal, konsultasikan dengan tenaga profesional.</p>
             </div>
         </div>
 
@@ -272,99 +236,25 @@
     </div>
 
     <script>
-        // ================= AUTO THEME DETECTION =================
-        const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)');
-        
-        function applySystemTheme(e) {
-            const html = document.documentElement;
-            const icon = document.getElementById('theme-icon');
-            if (e.matches) {
-                html.classList.add('dark');
-                if (icon) icon.classList.replace('fa-moon', 'fa-sun');
-            } else {
-                html.classList.remove('dark');
-                if (icon) icon.classList.replace('fa-sun', 'fa-moon');
-            }
-        }
-        
-        applySystemTheme(mediaQueryDark);
-        mediaQueryDark.addEventListener('change', applySystemTheme);
-
-        // ================= PWA SETUP (MANIFEST & SERVICE WORKER) =================
-        const setupPWA = () => {
-            const manifestJSON = {
-                "name": "Educare - Sistem Pakar",
-                "short_name": "Educare",
-                "start_url": window.location.href,
-                "display": "standalone",
-                "background_color": "#ffffff",
-                "theme_color": "#3b82f6",
-                "icons": [{
-                    "src": "https://cdn-icons-png.flaticon.com/512/2052/2052069.png",
-                    "sizes": "512x512",
-                    "type": "image/png"
-                }]
-            };
-            const manifestBlob = new Blob([JSON.stringify(manifestJSON)], {type: 'application/json'});
-            document.getElementById('manifest-link').href = URL.createObjectURL(manifestBlob);
-
-            const swCode = `
-                self.addEventListener('install', e => e.waitUntil(self.skipWaiting()));
-                self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
-                self.addEventListener('fetch', e => {
-                    e.respondWith(fetch(e.request).catch(() => new Response('App Offline')));
-                });
-            `;
-            const swBlob = new Blob([swCode], {type: 'application/javascript'});
-            
-            try {
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(err => console.warn(err));
-                }
-            } catch (error) {
-                console.warn('Service worker dilewati: URL protocol blob tidak didukung di environment ini.', error.message);
-            }
-        };
-        setupPWA();
-
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); 
-            deferredPrompt = e; 
-            document.getElementById('install-banner').classList.remove('hidden');
-        });
-
-        function installPWA() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        document.getElementById('install-banner').classList.add('hidden');
-                    }
-                    deferredPrompt = null;
-                });
-            }
-        }
-
         // ================= DATABASE =================
         const db_penyakit = [
-            { kode: 'P01', nama: 'Disleksia', deskripsi: 'Gangguan belajar yang mempengaruhi kemampuan membaca, mengeja, dan mengenali kata.', solusi: 'Gunakan metode multisensori, berikan waktu tambahan saat membaca, gunakan font yang mudah dibaca.' },
-            { kode: 'P02', nama: 'Disgrafia', deskripsi: 'Gangguan belajar yang mempengaruhi kemampuan menulis ekspresif, ejaan, dan tulisan tangan.', solusi: 'Gunakan kertas bergaris, latih motorik halus, perbolehkan mengetik daripada menulis tangan.' },
-            { kode: 'P03', nama: 'Diskalkulia', deskripsi: 'Gangguan belajar yang membuat anak kesulitan memahami angka, simbol matematika, dan perhitungan.', solusi: 'Gunakan alat peraga visual (blok, koin), kaitkan matematika dengan kegiatan sehari-hari, gunakan kalkulator untuk konsep kompleks.' }
+            { kode: 'P01', nama: 'Disleksia', deskripsi: 'Gangguan membaca dan mengeja.', solusi: 'Latihan fonik, media multisensori.' },
+            { kode: 'P02', nama: 'Disgrafia', deskripsi: 'Gangguan menulis.', solusi: 'Latihan motorik halus, gunakan media bantu.' },
+            { kode: 'P03', nama: 'Diskalkulia', deskripsi: 'Gangguan berhitung.', solusi: 'Gunakan benda nyata untuk berhitung.' }
         ];
 
         const db_gejala = [
-            { kode: 'G01', nama: 'Anak sering tertukar huruf yang mirip (seperti b dan d, p dan q)' },
-            { kode: 'G02', nama: 'Anak kesulitan mengeja kata-kata yang sederhana' },
-            { kode: 'G03', nama: 'Anak membaca dengan sangat lambat atau terbata-bata' },
-            { kode: 'G04', nama: 'Tulisan tangan anak sangat sulit dibaca (berantakan)' },
-            { kode: 'G05', nama: 'Anak sering keluar dari garis pembatas saat menulis di buku' },
-            { kode: 'G06', nama: 'Ukuran huruf yang ditulis tidak konsisten (besar kecil bercampur)' },
-            { kode: 'G07', nama: 'Anak mengeluh tangannya sakit atau cepat lelah saat menulis' },
-            { kode: 'G08', nama: 'Anak kesulitan mengenali angka atau simbol matematika (+, -, dsb)' },
-            { kode: 'G09', nama: 'Anak masih sangat bergantung pada jari untuk berhitung sederhana' },
-            { kode: 'G10', nama: 'Anak kesulitan membedakan arah kiri dan kanan' },
-            { kode: 'G11', nama: 'Anak sulit membaca jam analog atau bingung konsep waktu' }
+            { kode: 'G01', nama: 'Kesulitan mengeja kata dengan benar atau sering terbolak balik' },
+            { kode: 'G02', nama: 'Membaca dengan lambat dan sering kali salah menebak kata' },
+            { kode: 'G03', nama: 'Kesulitan memahami teks bacaan secara menyeluruh' },
+            { kode: 'G04', nama: 'Sering kali salah atau tertukar saat menulis huruf yang mirip seperti (b-d, p-q, m-w)' },
+            { kode: 'G05', nama: 'Ukuran atau jarak antar huruf dalam tulis tangan sangat tidak konsisten' },
+            { kode: 'G06', nama: 'Kesulitan menyalin teks dari papan tulis ke buku catatan' },
+            { kode: 'G07', nama: 'Proses menulis secara fisik sangat lambat dan tampak melelahkan' },
+            { kode: 'G08', nama: 'Kesulitan Mengingat atau memahami fakta matematika dasar (Tambah, Kurang, Kali)' },
+            { kode: 'G09', nama: 'Sering terbalik saat menulis atau membaca angka (Misal 13 menjadi 31, atau 6 dengan 9)' },
+            { kode: 'G10', nama: 'Kesulitan membaca grafik, tabel, atau memahami konsep waktu (jam/kalender)' },
+            { kode: 'G11', nama: 'Kesulitan menghitung uang kembalian atau mengurutkan angka' }
         ];
 
         const db_rule = [
@@ -373,218 +263,65 @@
             { penyakit: 'P03', gejala: ['G08', 'G09', 'G10', 'G11'] }
         ];
 
-        // ================= NAVIGATION & HISTORY API =================
-        function navigateTo(pageId, pushState = true) {
+        // ================= NAVIGATION =================
+        function navigateTo(pageId) {
             document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             window.scrollTo(0,0);
-            
             if (pageId === 'riwayat') loadRiwayat();
-            
-            if (pushState && pageId !== 'dashboard') {
-                history.pushState({ page: pageId }, '', `#${pageId}`);
-            }
         }
 
-        history.replaceState({ page: 'dashboard' }, '', '');
-
-        window.addEventListener('popstate', (e) => {
-            if (e.state && e.state.page) {
-                navigateTo(e.state.page, false);
-            } else {
-                navigateTo('dashboard', false);
-            }
-        });
-
-        // ================= CUSTOM ALERTS =================
-        function showAlert(title, msg) {
-            document.getElementById('alert-title').innerText = title;
-            document.getElementById('alert-msg').innerText = msg;
-            
-            const btnArea = document.querySelector('#alert-box .text-center');
-            btnArea.innerHTML = `
-                <i class="fa-solid fa-circle-exclamation text-4xl text-yellow-500 mb-3"></i>
-                <h3 class="font-bold text-lg mb-1" id="alert-title">${title}</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-5" id="alert-msg">${msg}</p>
-                <button onclick="closeAlert()" class="bg-primary text-white px-6 py-2 rounded-lg font-semibold w-full">Mengerti</button>
-            `;
-            
-            const modal = document.getElementById('alert-modal');
-            const box = document.getElementById('alert-box');
-            modal.classList.remove('hidden');
-            setTimeout(() => { modal.classList.remove('opacity-0'); box.classList.remove('scale-95'); }, 10);
-        }
-
-        function closeAlert() {
-            const modal = document.getElementById('alert-modal');
-            const box = document.getElementById('alert-box');
-            modal.classList.add('opacity-0'); box.classList.add('scale-95');
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
-
-        function konfirmasiKeluar() {
-            const modal = document.getElementById('alert-modal');
-            const box = document.getElementById('alert-box');
-            
-            const btnArea = box.querySelector('.text-center');
-            
-            btnArea.innerHTML = `
-                <i class="fa-solid fa-right-from-bracket text-4xl text-red-500 mb-3"></i>
-                <h3 class="font-bold text-lg mb-1">Keluar Aplikasi</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">Apakah Anda yakin ingin meninggalkan aplikasi Educare?</p>
-                <div class="flex gap-2">
-                    <button id="btn-batal-keluar" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-4 py-2 rounded-lg font-semibold w-1/2">Batal</button>
-                    <button id="btn-ya-keluar" class="bg-red-500 text-white px-4 py-2 rounded-lg font-semibold w-1/2">Keluar</button>
-                </div>
-            `;
-            
-            modal.classList.remove('hidden');
-            setTimeout(() => { modal.classList.remove('opacity-0'); box.classList.remove('scale-95'); }, 10);
-
-            document.getElementById('btn-batal-keluar').onclick = closeAlert;
-            
-            document.getElementById('btn-ya-keluar').onclick = () => {
-                closeAlert();
-                setTimeout(() => {
-                    window.close();
-                    history.go(-2);
-                    setTimeout(() => window.location.replace('about:blank'), 500);
-                }, 300);
-            };
-        }
-
-        function toggleDarkMode() {
-            const html = document.documentElement;
-            const icon = document.getElementById('theme-icon');
-            
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                icon.classList.replace('fa-sun', 'fa-moon');
-            } else {
-                html.classList.add('dark');
-                icon.classList.replace('fa-moon', 'fa-sun');
-            }
-        }
-
-        // ================= DIAGNOSA ENGINE (FORWARD CHAINING) =================
+        // ================= ENGINE & UI =================
         const gejalaListContainer = document.getElementById('gejala-list');
-        gejalaListContainer.innerHTML = ''; 
         db_gejala.forEach((g, index) => {
             gejalaListContainer.innerHTML += `
                 <div class="bg-white dark:bg-darkcard rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-3">
-                    <p class="text-sm font-semibold mb-3 text-gray-800 dark:text-gray-200">${index + 1}. ${g.nama}?</p>
+                    <p class="text-sm font-semibold mb-3 text-gray-800 dark:text-gray-200">${g.kode}. ${g.nama}?</p>
                     <div class="flex gap-3">
-                        <label class="flex-1 cursor-pointer relative">
-                            <input type="radio" name="gejala_${g.kode}" value="ya" class="peer absolute opacity-0 -z-10">
-                            <div class="text-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 peer-checked:bg-green-100 peer-checked:border-green-500 peer-checked:text-green-700 dark:peer-checked:bg-green-900/40 dark:peer-checked:border-green-500 transition-all text-sm font-bold shadow-sm">Ya</div>
-                        </label>
-                        <label class="flex-1 cursor-pointer relative">
-                            <input type="radio" name="gejala_${g.kode}" value="tidak" class="peer absolute opacity-0 -z-10">
-                            <div class="text-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 peer-checked:bg-red-100 peer-checked:border-red-500 peer-checked:text-red-700 dark:peer-checked:bg-red-900/40 dark:peer-checked:border-red-500 transition-all text-sm font-bold shadow-sm">Tidak</div>
-                        </label>
+                        <label class="flex-1 cursor-pointer"><input type="radio" name="g_${g.kode}" value="ya" class="hidden peer"><div class="text-center p-2 rounded-lg border peer-checked:bg-green-500 peer-checked:text-white">Ya</div></label>
+                        <label class="flex-1 cursor-pointer"><input type="radio" name="g_${g.kode}" value="tidak" class="hidden peer"><div class="text-center p-2 rounded-lg border peer-checked:bg-red-500 peer-checked:text-white">Tidak</div></label>
                     </div>
                 </div>
             `;
         });
 
         function prosesDiagnosa() {
-            let gejalaTerpilih = [];
-            let semuaTerjawab = true;
+            let terpilih = db_gejala.filter(g => document.querySelector(`input[name="g_${g.kode}"]:checked`)?.value === 'ya').map(g => g.kode);
+            if (terpilih.length === 0) return showAlert('Perhatian', 'Jawab setidaknya satu gejala!');
+            
+            let hasil = db_rule.reduce((prev, curr) => {
+                let match = curr.gejala.filter(g => terpilih.includes(g)).length;
+                let pct = (match / curr.gejala.length) * 100;
+                return pct > prev.pct ? { ...curr, pct } : prev;
+            }, { penyakit: '', pct: 0 });
 
-            db_gejala.forEach(g => {
-                const checked = document.querySelector(`input[name="gejala_${g.kode}"]:checked`);
-                if (checked) {
-                    if (checked.value === 'ya') {
-                        gejalaTerpilih.push(g.kode);
-                    }
-                } else {
-                    semuaTerjawab = false;
-                }
-            });
-
-            if (!semuaTerjawab) {
-                showAlert('Peringatan', 'Harap jawab semua pertanyaan (Ya/Tidak) sebelum melanjutkan proses diagnosa!');
-                return;
-            }
-
-            if (gejalaTerpilih.length === 0) {
-                showAlert('Hasil', 'Anak tidak menunjukkan gejala utama kesulitan belajar dari kuesioner ini.');
-                return;
-            }
-
-            // Hitung menggunakan Forward Chaining
-            let hasilPenyakitId = '';
-            let persentaseTertinggi = 0;
-
-            db_rule.forEach(rule => {
-                let matchCount = 0;
-                rule.gejala.forEach(rg => {
-                    if (gejalaTerpilih.includes(rg)) matchCount++;
-                });
-
-                let persentase = (matchCount / rule.gejala.length) * 100;
-                if (persentase > persentaseTertinggi) {
-                    persentaseTertinggi = persentase;
-                    hasilPenyakitId = rule.penyakit;
-                }
-            });
-
-            if (persentaseTertinggi > 0) {
-                const penyakit = db_penyakit.find(p => p.kode === hasilPenyakitId);
-                
-                document.getElementById('hasil-penyakit').innerText = penyakit.nama;
-                document.getElementById('hasil-persentase').innerText = persentaseTertinggi.toFixed(0);
-                document.getElementById('hasil-deskripsi').innerText = penyakit.deskripsi;
-                document.getElementById('hasil-solusi').innerText = penyakit.solusi;
-
-                simpanRiwayat(penyakit.nama, persentaseTertinggi);
+            if (hasil.pct > 0) {
+                const p = db_penyakit.find(x => x.kode === hasil.penyakit);
+                document.getElementById('hasil-penyakit').innerText = p.nama;
+                document.getElementById('hasil-persentase').innerText = hasil.pct.toFixed(0);
+                document.getElementById('hasil-deskripsi').innerText = p.deskripsi;
+                document.getElementById('hasil-solusi').innerText = p.solusi;
+                simpanRiwayat(p.nama, hasil.pct);
                 navigateTo('hasil');
-                
-                // Reset form
-                document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
             }
         }
 
-        // ================= LOCAL STORAGE (RIWAYAT) =================
-        function simpanRiwayat(hasil, persentase) {
-            let riwayat = JSON.parse(localStorage.getItem('educare_riwayat') || '[]');
-            const date = new Date();
-            riwayat.unshift({
-                id: Date.now(),
-                tanggal: `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`,
-                hasil: hasil,
-                persentase: persentase.toFixed(0)
-            });
-            localStorage.setItem('educare_riwayat', JSON.stringify(riwayat));
+        function simpanRiwayat(hasil, pct) {
+            let r = JSON.parse(localStorage.getItem('riwayat') || '[]');
+            r.unshift({ tgl: new Date().toLocaleDateString(), hasil, pct: pct.toFixed(0) });
+            localStorage.setItem('riwayat', JSON.stringify(r));
         }
 
         function loadRiwayat() {
-            const riwayatList = document.getElementById('riwayat-list');
-            let riwayat = JSON.parse(localStorage.getItem('educare_riwayat') || '[]');
-            
-            if(riwayat.length === 0) {
-                riwayatList.innerHTML = `
-                    <div class="text-center text-gray-500 dark:text-gray-400 py-10">
-                        <i class="fa-solid fa-folder-open text-4xl mb-3 opacity-50"></i>
-                        <p>Belum ada riwayat diagnosa.</p>
-                    </div>`;
-                return;
-            }
-
-            riwayatList.innerHTML = riwayat.map(r => `
-                <div class="bg-white dark:bg-darkcard p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex justify-between items-center">
-                    <div>
-                        <h4 class="font-bold text-primary">${r.hasil}</h4>
-                        <p class="text-xs text-gray-500">${r.tanggal}</p>
-                    </div>
-                    <div class="text-right">
-                        <div class="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded text-xs font-bold">
-                            ${r.persentase}%
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+            const list = document.getElementById('riwayat-list');
+            let r = JSON.parse(localStorage.getItem('riwayat') || '[]');
+            list.innerHTML = r.map(x => `<div class="bg-white p-4 rounded-xl shadow-sm">${x.hasil} - ${x.pct}% (${x.tgl})</div>`).join('');
         }
+
+        function showAlert(t, m) { alert(m); }
+        function closeAlert() {}
+        function toggleDarkMode() { document.documentElement.classList.toggle('dark'); }
+        window.addEventListener('popstate', () => navigateTo('dashboard'));
     </script>
 </body>
 </html>

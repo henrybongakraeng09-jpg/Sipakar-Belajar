@@ -30,7 +30,8 @@
         }
     </script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { -webkit-tap-highlight-color: transparent; outline: none !important; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .page { display: none; }
         .page.active { display: block; animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -115,10 +116,10 @@
         <!-- DIAGNOSA PAGE -->
         <div id="diagnosa" class="page">
             <div class="flex items-center gap-3 mb-6">
-                <button onclick="window.history.back()" class="w-10 h-10 bg-white dark:bg-darkcard shadow-sm rounded-full flex items-center justify-center">
+                <button onclick="navigateTo('dashboard')" class="w-10 h-10 bg-white dark:bg-darkcard shadow-sm rounded-full flex items-center justify-center">
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
-                <h2 class="text-xl font-bold">Kuesioner Diagnosa</h2>
+                <h2 class="text-xl font-bold">Deteksi Gejala</h2>
             </div>
 
             <div class="bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 p-4 rounded-xl mb-6 text-sm flex gap-3">
@@ -176,7 +177,7 @@
         <!-- INFORMASI PAGE -->
         <div id="informasi" class="page">
             <div class="flex items-center gap-3 mb-6">
-                <button onclick="window.history.back()" class="w-10 h-10 bg-white dark:bg-darkcard shadow-sm rounded-full flex items-center justify-center">
+                <button onclick="navigateTo('dashboard')" class="w-10 h-10 bg-white dark:bg-darkcard shadow-sm rounded-full flex items-center justify-center">
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
                 <h2 class="text-xl font-bold">Informasi Kesulitan</h2>
@@ -224,7 +225,7 @@
         <!-- RIWAYAT PAGE -->
         <div id="riwayat" class="page">
             <div class="flex items-center gap-3 mb-6">
-                <button onclick="window.history.back()" class="w-10 h-10 bg-white dark:bg-darkcard shadow-sm rounded-full flex items-center justify-center">
+                <button onclick="navigateTo('dashboard')" class="w-10 h-10 bg-white dark:bg-darkcard shadow-sm rounded-full flex items-center justify-center">
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
                 <h2 class="text-xl font-bold">Riwayat Diagnosa</h2>
@@ -238,7 +239,7 @@
         <!-- TENTANG PAGE -->
         <div id="tentang" class="page">
             <div class="flex items-center gap-3 mb-6">
-                <button onclick="window.history.back()" class="w-10 h-10 bg-white dark:bg-darkcard shadow-sm rounded-full flex items-center justify-center">
+                <button onclick="navigateTo('dashboard')" class="w-10 h-10 bg-white dark:bg-darkcard shadow-sm rounded-full flex items-center justify-center">
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
                 <h2 class="text-xl font-bold">Tentang Aplikasi</h2>

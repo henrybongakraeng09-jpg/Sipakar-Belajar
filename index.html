@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Educare - Sistem Pakar</title>
+    
+    <!-- Meta tag PWA -->
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2052/2052069.png">
+    <link id="manifest-link" rel="manifest">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome for Icons -->
@@ -87,6 +95,20 @@
         
         <!-- DASHBOARD PAGE -->
         <div id="dashboard" class="page active">
+            <!-- Banner Instalasi PWA (Disembunyikan secara default) -->
+            <div id="install-banner" class="hidden bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-4 text-white shadow-lg mb-6 flex justify-between items-center cursor-pointer hover:shadow-xl transform transition-all hover:-translate-y-1" onclick="installPWA()">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-download text-xl animate-bounce"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold">Instal Educare</h3>
+                        <p class="text-xs opacity-90">Pasang di HP Anda agar lebih cepat</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right opacity-80"></i>
+            </div>
+
             <!-- Menambahkan efek float pada icon dan pulse pada tangan -->
             <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg mb-6 relative overflow-hidden">
                 <div class="relative z-10">
@@ -293,6 +315,68 @@
     </div>
 
     <script>
+        // ================= PWA SETUP (MANIFEST & SERVICE WORKER) =================
+        const setupPWA = () => {
+            // 1. Buat Manifest secara Dinamis
+            const manifestJSON = {
+                "name": "Educare - Sistem Pakar",
+                "short_name": "Educare",
+                "start_url": window.location.href,
+                "display": "standalone",
+                "background_color": "#ffffff",
+                "theme_color": "#3b82f6",
+                "icons": [{
+                    "src": "https://cdn-icons-png.flaticon.com/512/2052/2052069.png",
+                    "sizes": "512x512",
+                    "type": "image/png"
+                }]
+            };
+            const manifestBlob = new Blob([JSON.stringify(manifestJSON)], {type: 'application/json'});
+            document.getElementById('manifest-link').href = URL.createObjectURL(manifestBlob);
+
+            // 2. Buat Service Worker Minimal untuk Bypass Syarat Install Chrome
+            const swCode = `
+                self.addEventListener('install', e => e.waitUntil(self.skipWaiting()));
+                self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+                self.addEventListener('fetch', e => {
+                    // Cache sederhana agar PWA dikenali
+                    e.respondWith(fetch(e.request).catch(() => new Response('App Offline')));
+                });
+            `;
+            const swBlob = new Blob([swCode], {type: 'application/javascript'});
+            
+            try {
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(err => console.warn(err));
+                }
+            } catch (error) {
+                console.warn('Service worker dilewati: URL protocol blob tidak didukung di environment ini.', error.message);
+            }
+        };
+        setupPWA();
+
+        // 3. Tangkap Event Instalasi dari Android/Browser
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault(); // Cegah pop-up default
+            deferredPrompt = e; // Simpan event
+            // Munculkan banner instal di dashboard
+            document.getElementById('install-banner').classList.remove('hidden');
+        });
+
+        // 4. Eksekusi Instalasi saat Banner Diklik
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        document.getElementById('install-banner').classList.add('hidden');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+
         // ================= DATABASE (Simulated with JS Objects) =================
         const db_penyakit = [
             {kode: 'P01', nama: 'Disleksia', deskripsi: 'Gangguan belajar yang mempengaruhi kemampuan membaca, mengeja, dan mengenali kata.', solusi: 'Gunakan metode multisensori, berikan waktu tambahan saat membaca, gunakan font yang khusus (OpenDyslexic) atau teks yang lebih besar.'},

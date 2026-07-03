@@ -1,513 +1,613 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sipakar-Belajar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educare - Sistem Pakar</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { primary: '#3b82f6', darkbg: '#121212', darkcard: '#1e1e1e' }
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;}
-        @keyframes blobFloat { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } }
-        .animate-blob { animation: blobFloat 10s infinite ease-in-out; }
-        @keyframes floatRotate { 0%, 100% { transform: translate(25%, -25%) rotate(-5deg); } 50% { transform: translate(20%, -20%) rotate(5deg); } }
-        .animate-float-rotate { animation: floatRotate 8s infinite ease-in-out; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
-        @keyframes ringPulse { 0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5); } 70% { box-shadow: 0 0 0 15px rgba(37, 99, 235, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); } }
-        .animate-ring-pulse { animation: ringPulse 2.5s infinite; }
-        @keyframes popWiggle { 0%, 100% { transform: scale(1) rotate(0deg); } 15% { transform: scale(1.25) rotate(-10deg); } 30% { transform: scale(1.25) rotate(10deg); } 45% { transform: scale(1.25) rotate(-10deg); } 60% { transform: scale(1) rotate(0deg); } }
-        .animate-icon-0 { animation: popWiggle 5s infinite ease-in-out; display: inline-block; transform-origin: center; }
-        .animate-icon-1 { animation: popWiggle 5s infinite ease-in-out 1.6s; display: inline-block; transform-origin: center; }
-        .animate-icon-2 { animation: popWiggle 5s infinite ease-in-out 3.2s; display: inline-block; transform-origin: center; }
-        @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .animate-float-0 { animation: floatY 3s ease-in-out infinite; }
-        .animate-float-1 { animation: floatY 4s ease-in-out infinite 0.5s; }
-        .animate-float-2 { animation: floatY 3.5s ease-in-out infinite 1s; }
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        .page { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .app-container { width: 100%; height: 100dvh; max-width: 450px; background-color: white; position: relative; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-        @media (min-width: 640px) { .app-container { height: 850px; border-radius: 40px; } }
+        /* Animasi Kustom Tambahan */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        
+        /* Animasi Icon Baru */
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+        .animate-heartbeat { animation: heartbeat 1.5s ease-in-out infinite; }
+        
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        .animate-wiggle { animation: wiggle 2.5s ease-in-out infinite; }
+        
+        @keyframes spin-reverse {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+        .animate-spin-reverse-slow { animation: spin-reverse 8s linear infinite; }
+        
+        @keyframes bounce-soft {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        .animate-bounce-soft { animation: bounce-soft 2s ease-in-out infinite; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800 dark:bg-darkbg dark:text-gray-200 min-h-screen flex flex-col">
 
-    <div class="app-container">
-        <div id="app-content" class="flex-1 overflow-hidden relative flex flex-col bg-slate-50"></div>
+    <!-- Navbar -->
+    <nav class="bg-white dark:bg-darkcard shadow-md sticky top-0 z-50">
+        <div class="max-w-md mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="navigate('dashboard')">
+                <i class="fa-solid fa-brain text-primary text-xl animate-pulse"></i>
+                <h1 class="font-bold text-lg">Educare</h1>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="toggleDarkMode()" class="text-gray-500 dark:text-gray-300 hover:text-primary">
+                    <i class="fa-solid fa-moon" id="theme-icon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
 
-        <!-- Navigation Bottom Update: Hanya 2 Menu (Beranda & Riwayat) dipisah rapi -->
-        <div id="bottom-nav" class="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-100 px-6 py-3 pb-6 sm:pb-4 flex justify-evenly items-center z-30 transition-all duration-300">
-            <button onclick="app.goTo('home')" id="nav-home" class="flex flex-col items-center gap-1 p-2 w-24 transition-all text-blue-600 scale-110">
-                <i data-lucide="home" class="w-6 h-6"></i>
-                <span class="text-[10px] font-bold">Beranda</span>
+    <!-- Main Container -->
+    <main class="flex-1 max-w-md w-full mx-auto p-4 relative">
+        
+        <!-- DASHBOARD PAGE -->
+        <div id="dashboard" class="page active">
+            <!-- Menambahkan efek float pada icon dan pulse pada tangan -->
+            <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg mb-6 relative overflow-hidden">
+                <div class="relative z-10">
+                    <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                        Halo, Selamat Datang! 
+                        <i class="fa-solid fa-hands-clapping text-yellow-300 animate-pulse"></i>
+                    </h2>
+                    <p class="text-sm opacity-90">Deteksi dini kesulitan belajar anak Anda (Disleksia, Disgrafia, Diskalkulia) dengan metode forward chaining.</p>
+                </div>
+                <!-- Ikon latar belakang yang mengambang -->
+                <i class="fa-solid fa-brain absolute -bottom-4 -right-2 text-8xl text-white opacity-20 animate-float"></i>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <!-- Efek hover scale dan transition ditambahkan -->
+                <div onclick="navigate('diagnosa')" class="bg-white dark:bg-darkcard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center cursor-pointer hover:shadow-md hover:scale-[1.03] transform transition-all duration-300">
+                    <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 mb-3 text-xl shadow-inner">
+                        <i class="fa-solid fa-stethoscope animate-heartbeat"></i>
+                    </div>
+                    <span class="font-semibold text-center text-sm">Mulai Diagnosa</span>
+                </div>
+                
+                <!-- Menu Baru: Informasi -->
+                <div onclick="navigate('informasi')" class="bg-white dark:bg-darkcard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center cursor-pointer hover:shadow-md hover:scale-[1.03] transform transition-all duration-300">
+                    <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center text-orange-600 dark:text-orange-300 mb-3 text-xl shadow-inner">
+                        <i class="fa-solid fa-book-open-reader animate-wiggle"></i>
+                    </div>
+                    <span class="font-semibold text-center text-sm">Informasi</span>
+                </div>
+
+                <div onclick="renderRiwayat(); navigate('riwayat');" class="bg-white dark:bg-darkcard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center cursor-pointer hover:shadow-md hover:scale-[1.03] transform transition-all duration-300">
+                    <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center text-green-600 dark:text-green-300 mb-3 text-xl shadow-inner">
+                        <i class="fa-solid fa-clock-rotate-left animate-spin-reverse-slow"></i>
+                    </div>
+                    <span class="font-semibold text-center text-sm">Riwayat</span>
+                </div>
+                
+                <div onclick="navigate('tentang')" class="bg-white dark:bg-darkcard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center cursor-pointer hover:shadow-md hover:scale-[1.03] transform transition-all duration-300">
+                    <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center text-purple-600 dark:text-purple-300 mb-3 text-xl shadow-inner">
+                        <i class="fa-solid fa-circle-info animate-bounce-soft"></i>
+                    </div>
+                    <span class="font-semibold text-center text-sm">Tentang Aplikasi</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAGNOSA PAGE -->
+        <div id="diagnosa" class="page">
+            <button onclick="navigate('dashboard')" class="mb-4 text-sm text-gray-500 hover:text-primary flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
             </button>
-            <button onclick="app.goTo('history')" id="nav-history" class="flex flex-col items-center gap-1 p-2 w-24 transition-all text-slate-400 opacity-60">
-                <i data-lucide="history" class="w-6 h-6"></i>
-                <span class="text-[10px] font-bold">Riwayat</span>
+            <h2 class="text-xl font-bold mb-4">Form Diagnosa</h2>
+
+            <div class="bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 p-4 rounded-xl text-sm mb-4 border border-blue-100 dark:border-blue-800">
+                <i class="fa-solid fa-circle-info mr-2"></i> Jawab pertanyaan di bawah ini dengan mengklik <strong>Ya</strong> atau <strong>Tidak</strong> berdasarkan kondisi anak Anda.
+            </div>
+
+            <div class="h-[60vh] overflow-y-auto pb-4" id="gejala-list">
+                <!-- Pertanyaan Ya/Tidak akan di-render disini via JS -->
+            </div>
+
+            <button onclick="prosesDiagnosa()" class="w-full bg-primary hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-xl mt-4 transition shadow-lg flex justify-center items-center gap-2">
+                <i class="fa-solid fa-magnifying-glass-chart"></i> Proses Diagnosa
             </button>
+        </div>
+
+        <!-- HASIL PAGE -->
+        <div id="hasil" class="page">
+            <button onclick="navigate('dashboard')" class="mb-4 text-sm text-gray-500 hover:text-primary flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Ke Dashboard
+            </button>
+            
+            <div class="bg-white dark:bg-darkcard rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden" id="hasil-content">
+                <div class="bg-blue-50 dark:bg-blue-900/30 p-6 text-center border-b border-gray-100 dark:border-gray-800">
+                    <h2 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-1">HASIL ANALISIS KESULITAN BELAJAR</h2>
+                    <h1 id="hasil-penyakit" class="text-3xl font-bold text-primary mb-2">Disleksia</h1>
+                    <div class="inline-block bg-white dark:bg-gray-800 px-4 py-1 rounded-full text-sm font-bold shadow-sm">
+                        Kecocokan: <span id="hasil-persentase" class="text-green-500">80%</span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="font-bold mb-2 flex items-center gap-2"><i class="fa-solid fa-file-medical text-blue-500"></i> Deskripsi</h3>
+                    <p id="hasil-deskripsi" class="text-sm text-gray-600 dark:text-gray-300 mb-4 leading-relaxed"></p>
+                    
+                    <h3 class="font-bold mb-2 flex items-center gap-2"><i class="fa-solid fa-lightbulb text-yellow-500"></i> Solusi Penanganan</h3>
+                    <p id="hasil-solusi" class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIWAYAT PAGE -->
+        <div id="riwayat" class="page">
+            <button onclick="navigate('dashboard')" class="mb-4 text-sm text-gray-500 hover:text-primary flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
+            </button>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Riwayat Diagnosa</h2>
+                <button onclick="hapusSemuaRiwayat()" class="text-sm text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i> Bersihkan</button>
+            </div>
+            
+            <div id="riwayat-list" class="space-y-3">
+                <!-- Riwayat items will be rendered here -->
+            </div>
+        </div>
+
+        <!-- TENTANG PAGE -->
+        <div id="tentang" class="page">
+            <button onclick="navigate('dashboard')" class="mb-4 text-sm text-gray-500 hover:text-primary flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
+            </button>
+            <div class="bg-white dark:bg-darkcard rounded-2xl shadow-sm p-8 border border-gray-100 dark:border-gray-800 text-center">
+                <i class="fa-solid fa-brain text-6xl text-primary mb-4"></i>
+                <h2 class="text-2xl font-bold mb-2">Sistem Pakar Kesulitan Belajar</h2>
+                <p class="text-sm text-gray-500 mb-6">Versi Web 1.0 (Forward Chaining)</p>
+                <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed text-left">
+                    Aplikasi ini dirancang menggunakan metode <strong>Forward Chaining</strong> untuk mendiagnosa 3 jenis kesulitan belajar pada anak secara dini:<br><br>
+                    <i class="fa-solid fa-check text-green-500 mr-2"></i> <strong>Disleksia</strong> (Kesulitan Membaca)<br>
+                    <i class="fa-solid fa-check text-green-500 mr-2"></i> <strong>Disgrafia</strong> (Kesulitan Menulis)<br>
+                    <i class="fa-solid fa-check text-green-500 mr-2"></i> <strong>Diskalkulia</strong> (Kesulitan Berhitung)<br><br>
+                    <em>*Catatan: Hasil diagnosa aplikasi ini bersifat rekomendasi awal dan tidak menggantikan diagnosis resmi dari psikolog atau dokter anak.</em>
+                </p>
+            </div>
+        </div>
+
+        <!-- INFORMASI / JENIS KESULITAN PAGE -->
+        <div id="informasi" class="page">
+            <button onclick="navigate('dashboard')" class="mb-4 text-sm text-gray-500 hover:text-primary flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
+            </button>
+            <h2 class="text-xl font-bold mb-4">Mengenal Kesulitan Belajar</h2>
+            
+            <div class="space-y-4 pb-6">
+                <!-- Disleksia -->
+                <div class="bg-white dark:bg-darkcard rounded-2xl shadow-sm p-5 border border-gray-100 dark:border-gray-800 transition-all transform hover:-translate-y-1 hover:shadow-md duration-300">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 text-lg">
+                            <i class="fa-solid fa-book"></i>
+                        </div>
+                        <h3 class="font-bold text-lg">Disleksia</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-3 leading-relaxed">Gangguan spesifik pada proses belajar yang ditandai dengan kesulitan dalam mengenali kata dengan tepat, mengeja, dan kemampuan memecahkan kode simbol (huruf).</p>
+                    <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-100 dark:border-blue-800/50">
+                        <span class="text-sm font-bold text-blue-700 dark:text-blue-400 block mb-2 flex items-center gap-2"><i class="fa-solid fa-hand-holding-medical"></i> Penanganan Awal:</span>
+                        <ul class="text-xs text-gray-600 dark:text-gray-300 list-disc pl-4 space-y-1.5">
+                            <li>Gunakan buku berhuruf besar (seperti font khusus *OpenDyslexic*).</li>
+                            <li>Terapkan metode belajar multisensori (melihat, mendengar, meraba).</li>
+                            <li>Bermain kata, tebak huruf, atau menyanyi lagu alfabet bersama anak.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Disgrafia -->
+                <div class="bg-white dark:bg-darkcard rounded-2xl shadow-sm p-5 border border-gray-100 dark:border-gray-800 transition-all transform hover:-translate-y-1 hover:shadow-md duration-300">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center text-red-600 dark:text-red-300 text-lg">
+                            <i class="fa-solid fa-pen-clip"></i>
+                        </div>
+                        <h3 class="font-bold text-lg">Disgrafia</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-3 leading-relaxed">Gangguan belajar yang berpusat pada kesulitan anak dalam mengekspresikan pikiran melalui tulisan tangan, jarak huruf yang tidak teratur, dan salah eja yang konsisten.</p>
+                    <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-xl border border-red-100 dark:border-red-800/50">
+                        <span class="text-sm font-bold text-red-700 dark:text-red-400 block mb-2 flex items-center gap-2"><i class="fa-solid fa-hand-holding-medical"></i> Penanganan Awal:</span>
+                        <ul class="text-xs text-gray-600 dark:text-gray-300 list-disc pl-4 space-y-1.5">
+                            <li>Berikan kertas bergaris besar atau kertas kotak-kotak untuk berlatih.</li>
+                            <li>Latih motorik halus (seperti memegang pensil atau meremas bola karet).</li>
+                            <li>Beri alternatif menjawab soal secara lisan atau mengetik untuk mengurangi stres.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Diskalkulia -->
+                <div class="bg-white dark:bg-darkcard rounded-2xl shadow-sm p-5 border border-gray-100 dark:border-gray-800 transition-all transform hover:-translate-y-1 hover:shadow-md duration-300">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center text-green-600 dark:text-green-300 text-lg">
+                            <i class="fa-solid fa-calculator"></i>
+                        </div>
+                        <h3 class="font-bold text-lg">Diskalkulia</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-3 leading-relaxed">Gangguan belajar yang membuat anak sangat kesulitan dalam memahami konsep angka, perhitungan dasar, dan simbol-simbol operasional matematika.</p>
+                    <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl border border-green-100 dark:border-green-800/50">
+                        <span class="text-sm font-bold text-green-700 dark:text-green-400 block mb-2 flex items-center gap-2"><i class="fa-solid fa-hand-holding-medical"></i> Penanganan Awal:</span>
+                        <ul class="text-xs text-gray-600 dark:text-gray-300 list-disc pl-4 space-y-1.5">
+                            <li>Gunakan alat peraga nyata dan visual (benda fisik, blok, stik es krim, koin).</li>
+                            <li>Kaitkan konsep matematika dengan kehidupan sehari-hari (contoh: saat berbelanja).</li>
+                            <li>Ciptakan permainan edukatif atau nyanyian yang berhubungan dengan angka.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Custom Alert Modal (No default alerts!) -->
+    <div id="alert-modal" class="fixed inset-0 bg-black/50 z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity">
+        <div class="bg-white dark:bg-darkcard rounded-2xl p-6 max-w-sm w-full shadow-2xl transform scale-95 transition-transform" id="alert-box">
+            <div class="text-center">
+                <i class="fa-solid fa-circle-exclamation text-4xl text-yellow-500 mb-3"></i>
+                <h3 class="font-bold text-lg mb-1" id="alert-title">Perhatian</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-5" id="alert-msg"></p>
+                <button onclick="closeAlert()" class="bg-primary text-white px-6 py-2 rounded-lg font-semibold w-full">Mengerti</button>
+            </div>
         </div>
     </div>
 
-<script>
-const KNOWLEDGE_BASE = {
-  disleksia: {
-    id: 'disleksia', title: "Disleksia (Kesulitan Membaca)", icon: "📖", color: "bg-indigo-100 text-indigo-600", indicator: "bg-indigo-500",
-    description: "Disleksia adalah gangguan belajar spesifik yang mempengaruhi kemampuan seseorang dalam membaca, mengeja, dan mengenali kata. Ini tidak ada hubungannya dengan tingkat kecerdasan (IQ). Anak dengan disleksia sering melihat huruf secara terbalik (seperti b dan d) atau kesulitan memecah kata menjadi suara-suara (fonem).",
-    advice: [
-      "Gunakan metode belajar multisensori (melihat, mendengar, menyentuh bentuk huruf).",
-      "Bacakan buku cerita bersama anak secara rutin dan tunjuk kata yang sedang dibaca.",
-      "Gunakan buku dengan font khusus yang mudah dibaca dan ukuran yang cukup besar.",
-      "Berikan pujian pada setiap kemajuan kecil, hindari memaksa anak membaca dengan cepat."
-    ],
-    elements: ["📖", "Aa", "🧠"]
-  },
-  diskalkulia: {
-    id: 'diskalkulia', title: "Diskalkulia (Kesulitan berhitung)", icon: "🔢", color: "bg-emerald-100 text-emerald-600", indicator: "bg-emerald-500",
-    description: "Diskalkulia adalah kesulitan belajar yang spesifik terhadap matematika. Anak dengan kondisi ini kesulitan memahami konsep dasar angka, operasi hitung (tambah, kurang, kali, bagi), mengelola waktu (membaca jam), dan estimasi jarak atau ukuran.",
-    advice: [
-      "Gunakan objek nyata (seperti balok, kancing) untuk mengajarkan konsep berhitung.",
-      "Hubungkan matematika dengan kehidupan sehari-hari (misalnya menghitung uang belanja).",
-      "Hindari hafalan tabel perkalian secara paksa, fokuslah pada pemahaman konsep dasar.",
-      "Gunakan bantuan visual seperti gambar atau jari untuk membantu perhitungan."
-    ],
-    elements: ["🔢", "➕", "📏"]
-  },
-  disgrafia: {
-    id: 'disgrafia', title: "Disgrafia (Kesulitan Menulis)", icon: "✍️", color: "bg-orange-100 text-orange-600", indicator: "bg-orange-500",
-    description: "Disgrafia adalah kondisi yang menyebabkan masalah dengan ekspresi tertulis. Ini mencakup masalah motorik halus (cara memegang pensil yang canggung, tulisan tidak terbaca) maupun kesulitan dalam menyusun kalimat dan menuangkan ide dari otak ke atas kertas secara berurutan.",
-    advice: [
-      "Latih motorik halus anak melalui permainan (seperti meremas playdough atau menyusun balok).",
-      "Gunakan alat bantu pegangan pensil (pencil grip) agar anak lebih nyaman saat menulis.",
-      "Gunakan kertas bergaris tebal untuk membantu konsistensi ukuran huruf anak.",
-      "Berikan waktu ekstra saat anak mendapat tugas menulis, atau perbolehkan mengetik."
-    ],
-    elements: ["✍️", "📝", "🎨"]
-  },
-  normal: {
-    id: 'normal', title: "Tidak Terindikasi (Normal)", icon: "🌟", color: "bg-blue-100 text-blue-600",
-    description: "Berdasarkan diagnosa, perkembangan belajar anak berada dalam rentang wajar dan tidak menunjukkan gejala spesifik kesulitan belajar.",
-    advice: [
-      "Perkembangan belajar anak tampak berada dalam batas wajar.",
-      "Terus berikan stimulasi belajar yang positif dan menyenangkan.",
-      "Pantau terus perkembangan anak secara berkala di sekolah dan rumah.",
-      "Dukung penuh minat dan bakat anak di bidang yang ia sukai."
-    ]
-  }
-};
-
-const BASE_QUESTIONS = [
-  { factId: 'G01', type: 'disleksia', text: 'Kesulitan mengeja kata dengan benar atau sering terbolak balik.' },
-  { factId: 'G02', type: 'disleksia', text: 'Membaca dengan lambat dan sering kali salah menebak kata.' },
-  { factId: 'G03', type: 'disleksia', text: 'Kesulitan memahami teks bacaan secara menyeluruh.' },
-  { factId: 'G04', type: 'disleksia', text: 'Sering kali salah atau tertukar saat menulis huruf yang mirip seperti (b-d, p-q, m-w).' },
-  { factId: 'G05', type: 'disgrafia', text: 'Ukuran atau jarak antar huruf dalam tulis tangan sangat tidak konsisten.' },
-  { factId: 'G06', type: 'disgrafia', text: 'Kesulitan menyalin teks dari papan tulis ke buku catatan.' },
-  { factId: 'G07', type: 'disgrafia', text: 'Proses menulis secara fisik sangat lambat dan tampak melelahkan.' },
-  { factId: 'G08', type: 'diskalkulia', text: 'Kesulitan Mengingat atau memahami fakta matematika dasar (Tambah,Kurang,Kali).' },
-  { factId: 'G09', type: 'diskalkulia', text: 'Sering terbalik saat menulis atau membaca angka (Misal 13 menjadi 31, atau 6 dengan 9).' },
-  { factId: 'G10', type: 'diskalkulia', text: 'Kesulitan membaca grafik, tabel, atau memahami konsep waktu (jam/kalender).' },
-  { factId: 'G11', type: 'diskalkulia', text: 'Kesulitan menghitung uang kembalian atau mengurutkan angka acak.' }
-];
-
-const state = {
-    currentView: 'home',
-    prevView: 'home',
-    currentQuestionIndex: 0,
-    answers: {},
-    selectedDetail: null,
-    history: JSON.parse(localStorage.getItem('sipakar-history')) || []
-};
-
-const app = {
-    goTo: function(view, pushToHistory = true) {
-        state.currentView = view;
-        if (pushToHistory) {
-            history.pushState({ view: view }, '', `#${view}`);
-        }
-        this.render();
-    },
-
-    openDetail: function(key, from, pushToHistory = true) {
-        state.selectedDetail = key;
-        state.prevView = from;
-        state.currentView = 'detail';
-        if (pushToHistory) {
-            history.pushState({ view: 'detail', detailKey: key, prevView: from }, '', `#detail-${key}`);
-        }
-        this.render();
-    },
-
-    startTest: function() {
-        state.answers = {};
-        state.currentQuestionIndex = 0;
-        this.goTo('test'); 
-    },
-
-    goBackQuestion: function() {
-        if (state.currentQuestionIndex > 0) {
-            state.currentQuestionIndex--;
-            this.render();
-        } else {
-            history.back();
-        }
-    },
-
-    handleAnswer: function(value) {
-        const currentQ = BASE_QUESTIONS[state.currentQuestionIndex];
-        state.answers[currentQ.factId] = value;
-
-        if (state.currentQuestionIndex < BASE_QUESTIONS.length - 1) {
-            state.currentQuestionIndex++;
-            this.render();
-        } else {
-            this.processResult();
-        }
-    },
-
-    runForwardChaining: function(currentAnswers) {
-        let facts = new Set();
-        BASE_QUESTIONS.forEach(q => { if (currentAnswers[q.factId] === 1) facts.add(q.factId); });
-
-        const rules = [
-            { id: 'R_DIS_1', premise: ['G01'], conclusion: 'IND_DIS_1' },
-            { id: 'R_DIS_2', premise: ['G02'], conclusion: 'IND_DIS_2' },
-            { id: 'R_DIS_3', premise: ['G03'], conclusion: 'IND_DIS_3' },
-            { id: 'R_DIS_4', premise: ['G04'], conclusion: 'IND_DIS_4' },
-            { id: 'R_DIS_TINGGI_1', premise: ['IND_DIS_1', 'IND_DIS_2'], conclusion: 'DISLEKSIA_TINGGI' },
-            { id: 'R_DIS_TINGGI_2', premise: ['IND_DIS_3', 'IND_DIS_4'], conclusion: 'DISLEKSIA_TINGGI' },
-            { id: 'R_DIS_SEDANG_1', premise: ['IND_DIS_1'], conclusion: 'DISLEKSIA_SEDANG' },
-            { id: 'R_DIS_SEDANG_2', premise: ['IND_DIS_2'], conclusion: 'DISLEKSIA_SEDANG' },
-            { id: 'R_GRAF_1', premise: ['G05'], conclusion: 'IND_GRAF_1' },
-            { id: 'R_GRAF_2', premise: ['G06'], conclusion: 'IND_GRAF_2' },
-            { id: 'R_GRAF_3', premise: ['G07'], conclusion: 'IND_GRAF_3' },
-            { id: 'R_GRAF_TINGGI_1', premise: ['IND_GRAF_1', 'IND_GRAF_3'], conclusion: 'DISGRAFIA_TINGGI' },
-            { id: 'R_KAL_1', premise: ['G08'], conclusion: 'IND_KAL_1' },
-            { id: 'R_KAL_2', premise: ['G09'], conclusion: 'IND_KAL_2' },
-            { id: 'R_KAL_3', premise: ['G10'], conclusion: 'IND_KAL_3' },
-            { id: 'R_KAL_4', premise: ['G11'], conclusion: 'IND_KAL_4' },
-            { id: 'R_KAL_TINGGI_1', premise: ['IND_KAL_1', 'IND_KAL_2'], conclusion: 'DISKALKULIA_TINGGI' },
-            { id: 'R_KAL_TINGGI_2', premise: ['IND_KAL_3', 'IND_KAL_4'], conclusion: 'DISKALKULIA_TINGGI' }
+    <script>
+        // ================= DATABASE (Simulated with JS Objects) =================
+        const db_penyakit = [
+            {kode: 'P01', nama: 'Disleksia', deskripsi: 'Gangguan belajar yang mempengaruhi kemampuan membaca, mengeja, dan mengenali kata.', solusi: 'Gunakan metode multisensori, berikan waktu tambahan saat membaca, gunakan font yang khusus (OpenDyslexic) atau teks yang lebih besar.'},
+            {kode: 'P02', nama: 'Disgrafia', deskripsi: 'Gangguan belajar yang mempengaruhi kemampuan menulis ekspresif, ejaan, dan tulisan tangan.', solusi: 'Gunakan kertas bergaris besar, latih motorik halus dengan meremas bola karet, perbolehkan mengetik daripada menulis tangan.'},
+            {kode: 'P03', nama: 'Diskalkulia', deskripsi: 'Gangguan belajar yang membuat anak kesulitan memahami angka, simbol matematika, dan perhitungan.', solusi: 'Gunakan alat peraga visual (blok, koin, sempoa), kaitkan matematika dengan kegiatan sehari-hari, berikan lebih banyak waktu pengerjaan.'}
         ];
 
-        let changed = true;
-        while (changed) {
-            changed = false;
-            for (let rule of rules) {
-                if (!facts.has(rule.conclusion)) {
-                    if (rule.premise.every(p => facts.has(p))) {
-                        facts.add(rule.conclusion);
-                        changed = true; 
+        // 11 Gejala Spesifik yang Dipilih
+        const db_gejala = [
+            {kode: 'G01', nama: 'Sering tertukar huruf yang mirip (misal: b/d, p/q)'},
+            {kode: 'G02', nama: 'Kesulitan mengeja kata sederhana'},
+            {kode: 'G03', nama: 'Membaca terbata-bata atau sangat lambat'},
+            {kode: 'G04', nama: 'Sering menghilangkan atau menebak huruf dalam kata'},
+            {kode: 'G05', nama: 'Tulisan tangan sangat sulit dibaca (berantakan)'},
+            {kode: 'G06', nama: 'Jarak spasi antar kata tidak beraturan saat menulis'},
+            {kode: 'G07', nama: 'Cara memegang pensil terlihat canggung atau terlalu kuat'},
+            {kode: 'G08', nama: 'Huruf sering bertumpuk atau ukuran tidak konsisten'},
+            {kode: 'G09', nama: 'Masih menggunakan bantuan jari untuk berhitung angka sederhana'},
+            {kode: 'G10', nama: 'Kesulitan membedakan arah kiri dan kanan'},
+            {kode: 'G11', nama: 'Sulit memahami konsep waktu (seperti membaca jam analog, kemarin/besok)'}
+        ];
+
+        // Seed Rules (Relasi IF-THEN Baru)
+        const db_rules = [
+            // Disleksia (Membaca)
+            { penyakit: 'P01', gejala: 'G01' }, { penyakit: 'P01', gejala: 'G02' }, { penyakit: 'P01', gejala: 'G03' }, { penyakit: 'P01', gejala: 'G04' },
+            // Disgrafia (Menulis)
+            { penyakit: 'P02', gejala: 'G05' }, { penyakit: 'P02', gejala: 'G06' }, { penyakit: 'P02', gejala: 'G07' }, { penyakit: 'P02', gejala: 'G08' },
+            // Diskalkulia (Matematika/Logika dasar)
+            { penyakit: 'P03', gejala: 'G09' }, { penyakit: 'P03', gejala: 'G10' }, { penyakit: 'P03', gejala: 'G11' }
+        ];
+
+        let riwayatDB = JSON.parse(localStorage.getItem('pakar_riwayat')) || [];
+
+        // ================= UI & NAVIGATION (WITH HISTORY API) =================
+        
+        // 1. Inisialisasi History API saat aplikasi dimuat
+        window.addEventListener('load', () => {
+            history.replaceState({page: 'dashboard'}, '', '#dashboard');
+        });
+
+        // 2. Deteksi saat Tombol Kembali HP / Browser ditekan
+        window.addEventListener('popstate', (e) => {
+            const activePage = document.querySelector('.page.active').id;
+            
+            if (activePage === 'dashboard') {
+                // Jika user berada di beranda dan menekan tombol kembali HP:
+                // Kita majukan kembali history-nya agar mereka tidak terlempar keluar dari aplikasi secara instan
+                history.pushState({page: 'dashboard'}, '', '#dashboard');
+                konfirmasiKeluar();
+            } else {
+                // Jika berada di halaman lain (diagnosa, history, dll), kembali ke halaman sebelumnya
+                const target = (e.state && e.state.page) ? e.state.page : 'dashboard';
+                navigate(target, true); // true = agar tidak menambah history tumpuk
+            }
+        });
+
+        // 3. Modifikasi fungsi navigasi utama untuk mencatat jejak (History Push)
+        function navigate(pageId, fromPopState = false) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0,0);
+            
+            // Catat history jika navigasi dilakukan dengan mengklik tombol/menu di aplikasi (bukan tombol back fisik)
+            if (!fromPopState) {
+                history.pushState({page: pageId}, '', '#' + pageId);
+            }
+        }
+
+        // 4. Custom Dialog untuk Konfirmasi Keluar (mencegah default browser alert)
+        function konfirmasiKeluar() {
+            document.getElementById('alert-title').innerText = "Keluar Aplikasi";
+            document.getElementById('alert-msg').innerText = "Apakah Anda yakin ingin meninggalkan aplikasi?";
+            
+            const modal = document.getElementById('alert-modal');
+            const box = document.getElementById('alert-box');
+            
+            const btnArea = box.querySelector('.text-center');
+            const oldHtml = btnArea.innerHTML; // Menyimpan format HTML default alert
+            
+            btnArea.innerHTML = `
+                <i class="fa-solid fa-right-from-bracket text-4xl text-red-500 mb-3"></i>
+                <h3 class="font-bold text-lg mb-1">Keluar Aplikasi</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">Apakah Anda yakin ingin meninggalkan aplikasi Educare?</p>
+                <div class="flex gap-2">
+                    <button id="btn-batal-keluar" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-4 py-2 rounded-lg font-semibold w-1/2">Batal</button>
+                    <button id="btn-ya-keluar" class="bg-red-500 text-white px-4 py-2 rounded-lg font-semibold w-1/2">Keluar</button>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.remove('opacity-0'); box.classList.remove('scale-95'); }, 10);
+
+            document.getElementById('btn-batal-keluar').onclick = () => {
+                closeAlert();
+                setTimeout(() => btnArea.innerHTML = oldHtml, 300); // Kembalikan ke format default alert
+            };
+            
+            document.getElementById('btn-ya-keluar').onclick = () => {
+                // Menghapus histori dan mencoba keluar tab (efektif di Android / PWA)
+                history.go(-2);
+                setTimeout(() => window.close(), 300);
+            };
+        }
+
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                html.classList.add('dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+            }
+        }
+
+        // Custom Alert
+        function showAlert(msg, title = "Perhatian") {
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-msg').innerText = msg;
+            const modal = document.getElementById('alert-modal');
+            const box = document.getElementById('alert-box');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                box.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeAlert() {
+            const modal = document.getElementById('alert-modal');
+            const box = document.getElementById('alert-box');
+            modal.classList.add('opacity-0');
+            box.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        // ================= DIAGNOSA ENGINE (FORWARD CHAINING) =================
+        
+        // Render Pertanyaan Ya / Tidak
+        const gejalaListContainer = document.getElementById('gejala-list');
+        gejalaListContainer.innerHTML = ''; // Kosongkan container
+        db_gejala.forEach((g, index) => {
+            gejalaListContainer.innerHTML += `
+                <div class="bg-white dark:bg-darkcard rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-3">
+                    <p class="text-sm font-semibold mb-3 text-gray-800 dark:text-gray-200">${index + 1}. ${g.nama}?</p>
+                    <div class="flex gap-3">
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="gejala_${g.kode}" value="ya" class="peer sr-only">
+                            <div class="text-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 peer-checked:bg-green-100 peer-checked:border-green-500 peer-checked:text-green-700 dark:peer-checked:bg-green-900/40 dark:peer-checked:border-green-500 transition-all text-sm font-bold shadow-sm">Ya</div>
+                        </label>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="gejala_${g.kode}" value="tidak" class="peer sr-only">
+                            <div class="text-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 peer-checked:bg-red-100 peer-checked:border-red-500 peer-checked:text-red-700 dark:peer-checked:bg-red-900/40 dark:peer-checked:border-red-500 transition-all text-sm font-bold shadow-sm">Tidak</div>
+                        </label>
+                    </div>
+                </div>
+            `;
+        });
+
+        function prosesDiagnosa() {
+            let gejalaTerpilih = [];
+            let belumDijawab = false;
+
+            // Validasi: Pastikan semua 11 pertanyaan telah dijawab
+            db_gejala.forEach(g => {
+                const radio = document.querySelector(`input[name="gejala_${g.kode}"]:checked`);
+                if (!radio) {
+                    belumDijawab = true;
+                } else if (radio.value === 'ya') {
+                    gejalaTerpilih.push(g.kode);
+                }
+            });
+
+            if (belumDijawab) {
+                return showAlert("Harap jawab semua pertanyaan dengan 'Ya' atau 'Tidak' sebelum memproses diagnosa.");
+            }
+
+            // Forward Chaining Logic
+            let kecocokanPenyakit = {};
+            let totalGejalaPenyakit = {};
+
+            db_penyakit.forEach(p => {
+                kecocokanPenyakit[p.kode] = 0;
+                totalGejalaPenyakit[p.kode] = 0;
+            });
+
+            // Hitung rule (IF condition)
+            db_rules.forEach(rule => {
+                totalGejalaPenyakit[rule.penyakit]++;
+                if (gejalaTerpilih.includes(rule.gejala)) {
+                    kecocokanPenyakit[rule.penyakit]++;
+                }
+            });
+
+            // Evaluasi rule (THEN conclusion)
+            let penyakitTertinggi = '';
+            let persentaseTertinggi = 0;
+
+            for (let kode in kecocokanPenyakit) {
+                let match = kecocokanPenyakit[kode];
+                let total = totalGejalaPenyakit[kode];
+                if (total > 0) {
+                    let persentase = (match / total) * 100;
+                    if (persentase > persentaseTertinggi) {
+                        persentaseTertinggi = persentase;
+                        penyakitTertinggi = kode;
                     }
                 }
             }
+
+            let hasilPenyakit = db_penyakit.find(p => p.kode === penyakitTertinggi);
+            
+            // Simpan Riwayat
+            const hasilStr = hasilPenyakit ? hasilPenyakit.nama : 'Tidak Terdeteksi';
+            const riwayatBaru = {
+                id: Date.now(),
+                tanggal: new Date().toLocaleDateString('id-ID'),
+                hasil: hasilStr,
+                persentase: persentaseTertinggi.toFixed(1)
+            };
+            riwayatDB.unshift(riwayatBaru);
+            localStorage.setItem('pakar_riwayat', JSON.stringify(riwayatDB));
+
+            // Tampilkan Hasil
+            tampilkanHasil(hasilPenyakit, persentaseTertinggi);
+            
+            // Reset Form Radio Buttons
+            document.querySelectorAll('input[type="radio"]').forEach(cb => cb.checked = false);
         }
 
-        const getDiagnosis = (category) => {
-            if (facts.has(`${category}_TINGGI`)) return { level: 'Tinggi', percent: 100 };
-            if (facts.has(`${category}_SEDANG`)) return { level: 'Sedang', percent: 55 };
-            return { level: 'Rendah', percent: 15 };
-        };
-
-        return { disleksia: getDiagnosis('DISLEKSIA'), diskalkulia: getDiagnosis('DISKALKULIA'), disgrafia: getDiagnosis('DISGRAFIA') };
-    },
-
-    processResult: function() {
-        const results = this.runForwardChaining(state.answers);
-        let primaryKey = 'normal';
-        let maxPercent = 0;
-        
-        ['disleksia', 'diskalkulia', 'disgrafia'].forEach(key => {
-            if (results[key].percent > maxPercent) {
-                maxPercent = results[key].percent;
-                primaryKey = key;
+        function tampilkanHasil(penyakit, persentase) {
+            if (penyakit && persentase > 0) {
+                document.getElementById('hasil-penyakit').innerText = penyakit.nama;
+                document.getElementById('hasil-persentase').innerText = persentase.toFixed(1) + "%";
+                document.getElementById('hasil-deskripsi').innerText = penyakit.deskripsi;
+                document.getElementById('hasil-solusi').innerText = penyakit.solusi;
+                
+                // Simpan untuk PDF
+                currentHasil = { namaPenyakit: penyakit.nama, persentase: persentase.toFixed(1), deskripsi: penyakit.deskripsi, solusi: penyakit.solusi };
+            } else {
+                document.getElementById('hasil-penyakit').innerText = "Tidak Terdeteksi";
+                document.getElementById('hasil-persentase').innerText = "0%";
+                document.getElementById('hasil-deskripsi').innerText = "Gejala yang dipilih tidak mengarah pada kesulitan belajar spesifik (Disleksia, Disgrafia, Diskalkulia) yang ada di basis pengetahuan.";
+                document.getElementById('hasil-solusi').innerText = "Sebaiknya konsultasikan lebih lanjut dengan psikolog anak atau tenaga pendidik profesional.";
+                
+                currentHasil = { namaPenyakit: 'Tidak Terdeteksi', persentase: '0', deskripsi: 'Gejala tidak spesifik.', solusi: 'Konsultasikan dengan pakar.' };
             }
-        });
-        if (maxPercent <= 15) primaryKey = 'normal';
-
-        const dateStr = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-        
-        const newHistoryItem = {
-            id: Date.now(), date: dateStr, primaryKey,
-            level: primaryKey === 'normal' ? 'Rendah' : results[primaryKey].level,
-            color: primaryKey === 'normal' ? 'text-green-600 bg-green-100' : 'text-blue-600 bg-blue-100'
-        };
-
-        state.history.unshift(newHistoryItem);
-        localStorage.setItem('sipakar-history', JSON.stringify(state.history));
-        
-        state.currentView = 'result';
-        history.replaceState({ view: 'result' }, '', `#result`);
-        this.render();
-    },
-
-    render: function() {
-        const contentDiv = document.getElementById('app-content');
-        const navDiv = document.getElementById('bottom-nav');
-        let html = '';
-
-        if (['test', 'detail', 'result'].includes(state.currentView)) {
-            navDiv.style.transform = "translateY(100%)";
-            navDiv.style.opacity = "0";
-            navDiv.style.pointerEvents = "none";
-        } else {
-            navDiv.style.transform = "translateY(0)";
-            navDiv.style.opacity = "1";
-            navDiv.style.pointerEvents = "auto";
-            this.updateNavUI();
+            
+            navigate('hasil');
         }
 
-        switch(state.currentView) {
-            case 'home': html = this.getHomeHTML(); break;
-            case 'test': html = this.getTestHTML(); break;
-            case 'result': html = this.getResultHTML(); break;
-            case 'history': html = this.getHistoryHTML(); break;
-            case 'detail': html = this.getDetailHTML(); break;
-        }
-
-        contentDiv.innerHTML = html;
-        lucide.createIcons();
-    },
-
-    updateNavUI: function() {
-        const navs = ['home', 'history']; // Edukasi dihilangkan dari nav bawah
-        navs.forEach(nav => {
-            const btn = document.getElementById(`nav-${nav}`);
-            if(btn) {
-                if (state.currentView === nav) {
-                    btn.className = "flex flex-col items-center gap-1 p-2 w-24 transition-all text-blue-600 scale-110";
-                } else {
-                    btn.className = "flex flex-col items-center gap-1 p-2 w-24 transition-all text-slate-400 opacity-60 hover:text-slate-600 hover:opacity-100";
-                }
+        // ================= RIWAYAT =================
+        function renderRiwayat() {
+            const list = document.getElementById('riwayat-list');
+            list.innerHTML = '';
+            
+            if (riwayatDB.length === 0) {
+                list.innerHTML = `<div class="text-center text-gray-500 py-10"><i class="fa-solid fa-folder-open text-4xl mb-3 opacity-50"></i><p>Belum ada riwayat diagnosa.</p></div>`;
+                return;
             }
-        });
-    },
 
-    getHomeHTML: function() {
-        let categoriesHtml = ['disleksia', 'diskalkulia', 'disgrafia'].map((key, idx) => {
-            const item = KNOWLEDGE_BASE[key];
-            return `
-                <div class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-slate-100 cursor-pointer active:bg-slate-50 transition-all hover:shadow-md animate-fade-in-up" 
-                     style="animation-delay: ${600 + (idx * 150)}ms" onclick="app.openDetail('${key}', 'home')">
-                  <div class="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg shrink-0 ${item.color}">
-                    <span class="animate-icon-${idx}" style="animation-delay: ${idx * 0.3}s">${item.icon}</span>
-                  </div>
-                  <div class="flex-1">
-                    <h4 class="font-bold text-slate-800 leading-tight mb-1">${item.title}</h4>
-                    <p class="text-[11px] text-slate-500 line-clamp-1">Klik untuk penjelasan & solusi</p>
-                  </div>
-                  <i data-lucide="chevron-right" class="w-5 h-5 text-slate-400 shrink-0"></i>
-                </div>`;
-        }).join('');
-
-        return `
-            <div class="flex flex-col h-full overflow-y-auto pb-24">
-              <div class="bg-blue-600 rounded-b-[40px] p-8 pt-12 pb-16 text-white shadow-lg relative overflow-hidden shrink-0">
-                <div class="absolute top-[-10%] left-[-10%] w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-                <div class="absolute bottom-[-10%] right-[-10%] w-64 h-64 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" style="animation-delay: 2s"></div>
-                
-                <div class="absolute top-0 right-0 opacity-10 animate-float-rotate">
-                  <i data-lucide="book" style="width: 240px; height: 240px;"></i>
-                </div>
-
-                <div class="animate-fade-in-up" style="animation-delay: 0ms">
-                  <div class="flex items-center gap-3 mb-2 relative z-10">
-                    <div class="bg-white/20 p-2 rounded-xl backdrop-blur-md"><i data-lucide="book" class="text-white w-7 h-7"></i></div>
-                    <h1 class="text-3xl font-bold tracking-tight">Sipakar-Belajar</h1>
-                  </div>
-                </div>
-                
-                <p class="text-blue-50 mb-8 text-sm leading-relaxed relative z-10 opacity-90 animate-fade-in-up" style="animation-delay: 150ms">
-                  Sistem Pakar Diagnosa Kesulitan Belajar Berbasis Forward Chaining.
-                </p>
-                
-                <div class="animate-fade-in-up" style="animation-delay: 300ms">
-                  <button onclick="app.startTest()" class="w-full bg-white text-blue-600 font-bold py-4 rounded-2xl shadow-xl flex items-center justify-center gap-2 active:scale-95 transition-all relative z-10 animate-ring-pulse hover:bg-slate-50">
-                    <i data-lucide="stethoscope" class="w-6 h-6"></i> Mulai Diagnosa
-                  </button>
-                </div>
-              </div>
-
-              <div class="px-6 relative z-10 flex-grow flex flex-col justify-center pt-6">
-                <div class="w-full animate-fade-in-up" style="animation-delay: 450ms">
-                  <h3 class="font-bold text-slate-800 mb-4 px-1">Kategori Diagnosa</h3>
-                  <div class="space-y-3">${categoriesHtml}</div>
-                </div>
-              </div>
-            </div>`;
-    },
-
-    getTestHTML: function() {
-        const question = BASE_QUESTIONS[state.currentQuestionIndex];
-        const progress = ((state.currentQuestionIndex) / BASE_QUESTIONS.length) * 100;
-        const categoryInfo = KNOWLEDGE_BASE[question.type];
-        const sequentialCode = `G${String(state.currentQuestionIndex + 1).padStart(2, '0')}`;
-        const rotations = ['-rotate-6', 'rotate-12', '-rotate-3'];
-
-        let elementsHtml = categoryInfo.elements.map((el, idx) => `
-            <div class="animate-float-${idx}">
-                <div class="w-14 h-14 rounded-2xl ${categoryInfo.color.split(' ')[0]} flex items-center justify-center text-2xl shadow-sm transform ${rotations[idx]} opacity-80">${el}</div>
-            </div>`).join('');
-
-        return `
-            <div class="flex flex-col h-full bg-slate-50 overflow-hidden">
-                <div class="bg-white px-4 py-4 flex items-center shadow-sm sticky top-0 z-20">
-                  <button onclick="app.goBackQuestion()" class="p-2 -ml-2 text-slate-600 active:bg-slate-100 rounded-full transition-colors">
-                    <i data-lucide="chevron-left" class="w-6 h-6"></i>
-                  </button>
-                  <div class="flex-1 text-center font-bold text-slate-800">Identifikasi Masalah ${state.currentQuestionIndex + 1}/${BASE_QUESTIONS.length}</div>
-                  <div class="w-10"></div> 
-                </div>
-                <div class="h-1.5 w-full bg-slate-200 shrink-0">
-                  <div class="h-full bg-blue-500 transition-all duration-300 ease-out" style="width: ${progress}%"></div>
-                </div>
-                <div class="flex-1 px-6 py-6 flex flex-col overflow-y-auto">
-                  <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-6 relative shrink-0">
-                    <div class="absolute top-0 left-0 w-full h-1 ${categoryInfo.indicator}"></div>
-                    <div class="flex items-start gap-4 mt-2">
-                      <div class="shrink-0 px-3 py-1.5 rounded-xl text-sm font-bold shadow-sm ${categoryInfo.color}">${sequentialCode}</div>
-                      <h2 class="text-[17px] font-medium text-slate-700 leading-relaxed text-left flex-1">${question.text}</h2>
+            riwayatDB.forEach(r => {
+                list.innerHTML += `
+                    <div class="bg-white dark:bg-darkcard p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-primary text-lg">Diagnosa Anak</h4>
+                            <p class="text-sm font-semibold">${r.hasil} - ${r.persentase}%</p>
+                            <p class="text-xs text-gray-400 mt-1"><i class="fa-regular fa-calendar mr-1"></i> ${r.tanggal}</p>
+                        </div>
                     </div>
-                  </div>
-                  <div class="shrink-0 mb-6">
-                    <p class="text-center text-slate-500 mb-4 text-sm font-medium">Apakah anak mengalami masalah ini?</p>
-                    <div class="space-y-4">
-                        <button onclick="app.handleAnswer(1)" class="w-full bg-white border-2 border-slate-100 text-slate-700 p-4 rounded-2xl font-bold text-xl active:border-blue-500 active:bg-blue-50 transition-all shadow-sm flex items-center justify-between">
-                          Ya<div class="w-6 h-6 rounded-full border-2 border-slate-200"></div>
-                        </button>
-                        <button onclick="app.handleAnswer(0)" class="w-full bg-white border-2 border-slate-100 text-slate-700 p-4 rounded-2xl font-bold text-xl active:border-blue-500 active:bg-blue-50 transition-all shadow-sm flex items-center justify-between">
-                          Tidak<div class="w-6 h-6 rounded-full border-2 border-slate-200"></div>
-                        </button>
-                    </div>
-                  </div>
-                  <div class="mt-8 mb-auto flex justify-center items-center gap-6 pb-6">${elementsHtml}</div>
-                </div>
-            </div>`;
-    },
-
-    getResultHTML: function() {
-        const historyItem = state.history[0];
-        const solutionData = KNOWLEDGE_BASE[historyItem.primaryKey];
-        let adviceHtml = solutionData.advice.map((item) => `
-            <li class="flex gap-3 text-sm text-slate-600"><span class="text-blue-500 font-bold">•</span><span>${item}</span></li>
-        `).join('');
-
-        return `
-            <div class="flex flex-col h-full bg-slate-50 overflow-y-auto pb-24">
-                <div class="bg-blue-600 p-6 pt-10 text-white text-center rounded-b-[30px] shadow-md shrink-0">
-                  <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-md">
-                    <i data-lucide="check-circle-2" class="text-white w-8 h-8"></i>
-                  </div>
-                  <h2 class="text-2xl font-bold mb-1">Hasil Diagnosa</h2>
-                  <p class="text-blue-100 text-sm opacity-90">Kesimpulan Berdasarkan Forward Chaining</p>
-                </div>
-
-                <div class="px-5 py-6">
-                  <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 mb-4">
-                    <h3 class="font-bold text-slate-800 flex items-center gap-2 mb-3">
-                      <span class="text-2xl">${solutionData.icon}</span> ${solutionData.title}
-                    </h3>
-                    <p class="text-sm text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100 text-justify leading-relaxed">${solutionData.description}</p>
-                  </div>
-
-                  <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 mt-2 mb-6">
-                    <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
-                      <i data-lucide="info" class="w-5 h-5 text-blue-500"></i> Solusi & Penanganan Awal
-                    </h3>
-                    <ul class="space-y-3">${adviceHtml}</ul>
-                  </div>
-
-                  <button onclick="app.goTo('home')" class="w-full mt-4 bg-white border-2 border-slate-200 text-slate-700 font-bold py-4 rounded-2xl flex items-center justify-center gap-2 active:bg-slate-50 transition-all">
-                    <i data-lucide="rotate-ccw" class="w-5 h-5"></i> Mulai Diagnosa Baru
-                  </button>
-                </div>
-            </div>`;
-    },
-
-    getHistoryHTML: function() {
-        let historyList = state.history.length === 0 ? `
-            <div class="text-center py-10">
-                <i data-lucide="history" class="w-12 h-12 mx-auto text-slate-300 mb-3"></i>
-                <p class="text-slate-500 font-medium">Belum ada riwayat.</p>
-            </div>` : state.history.map(item => `
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 mb-3">
-              <div class="flex justify-between items-start mb-2">
-                <div class="flex items-center gap-2 text-[10px] text-slate-500 font-medium uppercase tracking-wider">
-                  <i data-lucide="calendar-days" class="w-3 h-3"></i> ${item.date}
-                </div>
-                <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase ${item.color}">Risiko ${item.level}</span>
-              </div>
-              <div class="flex items-center gap-3 mt-2">
-                <div class="text-2xl">${KNOWLEDGE_BASE[item.primaryKey].icon}</div>
-                <h4 class="font-bold text-slate-800 leading-tight">${KNOWLEDGE_BASE[item.primaryKey].title}</h4>
-              </div>
-            </div>`).join('');
-
-        return `
-            <div class="flex flex-col h-full bg-slate-50 overflow-y-auto pb-24">
-                <div class="bg-white px-4 py-4 flex items-center shadow-sm sticky top-0 z-20 shrink-0">
-                  <div class="flex-1 text-center font-bold text-slate-800">Riwayat Diagnosa</div>
-                </div>
-                <div class="p-6">${historyList}</div>
-            </div>`;
-    },
-
-    getDetailHTML: function() {
-        const data = KNOWLEDGE_BASE[state.selectedDetail];
-        let adviceList = data.advice.map((item, idx) => `
-            <li class="flex gap-3 text-sm text-slate-600 items-start">
-              <div class="w-6 h-6 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold shrink-0 mt-0.5">${idx + 1}</div>
-              <span class="leading-relaxed">${item}</span>
-            </li>`).join('');
-
-        return `
-            <div class="flex flex-col h-full bg-white overflow-y-auto pb-24">
-                <div class="bg-white px-4 py-4 flex items-center shadow-sm sticky top-0 z-20 shrink-0">
-                  <button onclick="history.back()" class="p-2 -ml-2 text-slate-600 active:bg-slate-100 rounded-full transition-colors">
-                    <i data-lucide="chevron-left" class="w-6 h-6"></i>
-                  </button>
-                  <div class="flex-1 text-center font-bold text-slate-800 truncate px-2">Detail ${data.title.split(' ')[0]}</div>
-                  <div class="w-10"></div>
-                </div>
-                <div class="p-6">
-                  <div class="flex flex-col items-center text-center mb-8">
-                    <div class="w-20 h-20 ${data.color} rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-md">${data.icon}</div>
-                    <h2 class="text-2xl font-bold text-slate-800">${data.title}</h2>
-                  </div>
-                  <div class="mb-8">
-                    <h3 class="font-bold text-slate-800 mb-3 border-b pb-2 flex items-center gap-2">
-                        <i data-lucide="book-open" class="w-5 h-5 text-blue-500"></i> Penjelasan
-                    </h3>
-                    <p class="text-slate-600 text-sm leading-relaxed text-justify">${data.description}</p>
-                  </div>
-                  <div>
-                    <h3 class="font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2">
-                        <i data-lucide="info" class="w-5 h-5 text-blue-500"></i> Solusi Penanganan
-                    </h3>
-                    <ul class="space-y-4">${adviceList}</ul>
-                  </div>
-                </div>
-            </div>`;
-    }
-};
-
-window.addEventListener('popstate', function(event) {
-    if (event.state && event.state.view) {
-        if (event.state.view === 'detail') {
-            app.openDetail(event.state.detailKey, event.state.prevView, false);
-        } else {
-            app.goTo(event.state.view, false);
+                `;
+            });
         }
-    } else {
-        app.goTo('home', false);
-    }
-});
 
-document.addEventListener("DOMContentLoaded", () => { 
-    history.replaceState({ view: 'home' }, '', '#home');
-    app.render(); 
-});
-</script>
+        function hapusSemuaRiwayat() {
+            if(riwayatDB.length === 0) return;
+            // Gunakan konfirmasi buatan sendiri tanpa alert/confirm
+            document.getElementById('alert-title').innerText = "Hapus Riwayat";
+            document.getElementById('alert-msg').innerText = "Apakah Anda yakin ingin menghapus semua riwayat diagnosa?";
+            
+            const modal = document.getElementById('alert-modal');
+            const box = document.getElementById('alert-box');
+            
+            // Ganti tombol
+            const btnArea = box.querySelector('.text-center');
+            const oldHtml = btnArea.innerHTML;
+            btnArea.innerHTML = `
+                <i class="fa-solid fa-trash-can text-4xl text-red-500 mb-3"></i>
+                <h3 class="font-bold text-lg mb-1">Hapus Riwayat</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">Semua data riwayat akan hilang selamanya.</p>
+                <div class="flex gap-2">
+                    <button id="btn-batal" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-4 py-2 rounded-lg font-semibold w-1/2">Batal</button>
+                    <button id="btn-hapus" class="bg-red-500 text-white px-4 py-2 rounded-lg font-semibold w-1/2">Hapus</button>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.remove('opacity-0'); box.classList.remove('scale-95'); }, 10);
+
+            document.getElementById('btn-batal').onclick = () => {
+                closeAlert();
+                setTimeout(() => btnArea.innerHTML = oldHtml, 300); // kembalikan template alert
+            };
+            
+            document.getElementById('btn-hapus').onclick = () => {
+                riwayatDB = [];
+                localStorage.removeItem('pakar_riwayat');
+                renderRiwayat();
+                closeAlert();
+                setTimeout(() => btnArea.innerHTML = oldHtml, 300);
+            };
+        }
+
+    </script>
 </body>
 </html>
